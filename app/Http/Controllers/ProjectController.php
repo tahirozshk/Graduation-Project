@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use App\Models\Student;
+use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -65,6 +66,16 @@ class ProjectController extends Controller
 
         $project = Project::create($validated);
 
+        // Log this activity
+        ActivityLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'created',
+            'model' => 'Project',
+            'model_name' => $project->title,
+            'model_id' => $project->id,
+            'description' => "Created project: {$project->title}",
+        ]);
+
         return redirect()->route('projects.index')->with('success', 'Project created successfully.');
     }
 
@@ -113,6 +124,16 @@ class ProjectController extends Controller
 
         $project->update($validated);
 
+        // Log this activity
+        ActivityLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'updated',
+            'model' => 'Project',
+            'model_name' => $project->title,
+            'model_id' => $project->id,
+            'description' => "Updated project: {$project->title}",
+        ]);
+
         return redirect()->route('projects.index')->with('success', 'Project updated successfully.');
     }
 
@@ -121,6 +142,16 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
+        // Log this activity before deleting
+        ActivityLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'deleted',
+            'model' => 'Project',
+            'model_name' => $project->title,
+            'model_id' => $project->id,
+            'description' => "Deleted project: {$project->title}",
+        ]);
+        
         $project->delete();
         return redirect()->route('projects.index')->with('success', 'Project deleted successfully.');
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Report;
 use App\Models\Project;
+use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -65,6 +66,16 @@ class ReportController extends Controller
 
         $report = Report::create($validated);
 
+        // Log this activity
+        ActivityLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'created',
+            'model' => 'Report',
+            'model_name' => "Week {$report->week_number} Report",
+            'model_id' => $report->id,
+            'description' => "Created report for week {$report->week_number}",
+        ]);
+
         return redirect()->route('reports.index')->with('success', 'Report created successfully.');
     }
 
@@ -113,6 +124,16 @@ class ReportController extends Controller
 
         $report->update($validated);
 
+        // Log this activity
+        ActivityLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'updated',
+            'model' => 'Report',
+            'model_name' => "Week {$report->week_number} Report",
+            'model_id' => $report->id,
+            'description' => "Updated report for week {$report->week_number}",
+        ]);
+
         return redirect()->route('reports.index')->with('success', 'Report updated successfully.');
     }
 
@@ -121,6 +142,16 @@ class ReportController extends Controller
      */
     public function destroy(Report $report)
     {
+        // Log this activity before deleting
+        ActivityLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'deleted',
+            'model' => 'Report',
+            'model_name' => "Week {$report->week_number} Report",
+            'model_id' => $report->id,
+            'description' => "Deleted report for week {$report->week_number}",
+        ]);
+        
         $report->delete();
         return redirect()->route('reports.index')->with('success', 'Report deleted successfully.');
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -52,6 +53,16 @@ class StudentController extends Controller
 
         $validated['teacher_id'] = Auth::id();
         $student = Student::create($validated);
+
+        // Log this activity
+        ActivityLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'created',
+            'model' => 'Student',
+            'model_name' => $student->name,
+            'model_id' => $student->id,
+            'description' => "Created student: {$student->name} ({$student->student_id})",
+        ]);
 
         return redirect()->route('students.index')->with('success', 'Student created successfully.');
     }
@@ -110,6 +121,16 @@ class StudentController extends Controller
 
         $student->update($validated);
 
+        // Log this activity
+        ActivityLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'updated',
+            'model' => 'Student',
+            'model_name' => $student->name,
+            'model_id' => $student->id,
+            'description' => "Updated student: {$student->name}",
+        ]);
+
         return redirect()->route('students.index')->with('success', 'Student updated successfully.');
     }
 
@@ -124,6 +145,16 @@ class StudentController extends Controller
         if (!$user->isAdmin() && $student->teacher_id !== $user->id) {
             abort(403, 'Unauthorized action.');
         }
+        
+        // Log this activity before deleting
+        ActivityLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'deleted',
+            'model' => 'Student',
+            'model_name' => $student->name,
+            'model_id' => $student->id,
+            'description' => "Deleted student: {$student->name}",
+        ]);
         
         $student->delete();
 

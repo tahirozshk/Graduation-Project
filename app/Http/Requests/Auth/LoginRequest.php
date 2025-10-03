@@ -49,6 +49,15 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        // Check if user account is pending approval
+        if (Auth::user()->status === 'pending') {
+            Auth::logout();
+            
+            throw ValidationException::withMessages([
+                'email' => 'Your account is pending approval. Please wait for an administrator to activate your account.',
+            ]);
+        }
+
         RateLimiter::clear($this->throttleKey());
     }
 

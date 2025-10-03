@@ -3,6 +3,15 @@
 @section('title', 'Reports')
 @section('subtitle', 'Track weekly submissions and grades')
 
+@section('header-actions')
+    <a href="{{ route('reports.create') }}" class="px-5 py-2.5 text-white text-sm font-medium rounded-lg hover:opacity-90 transition-opacity flex items-center shadow-sm" style="background-color: #7A001E;">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+        Add Report
+    </a>
+@endsection
+
 @section('content')
 <div class="space-y-6">
     <!-- Stats Cards -->
