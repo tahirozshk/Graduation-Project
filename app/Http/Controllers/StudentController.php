@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class StudentController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */
@@ -50,7 +52,11 @@ class StudentController extends Controller
      */
     public function show(Student $student)
     {
-        $this->authorize('view', $student);
+        // Check if student belongs to authenticated teacher
+        if ($student->teacher_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         $student->load('projects.reports');
         return view('students.show', compact('student'));
     }
@@ -60,7 +66,11 @@ class StudentController extends Controller
      */
     public function edit(Student $student)
     {
-        $this->authorize('update', $student);
+        // Check if student belongs to authenticated teacher
+        if ($student->teacher_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         return view('students.edit', compact('student'));
     }
 
@@ -69,7 +79,10 @@ class StudentController extends Controller
      */
     public function update(Request $request, Student $student)
     {
-        $this->authorize('update', $student);
+        // Check if student belongs to authenticated teacher
+        if ($student->teacher_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
 
         $validated = $request->validate([
             'student_id' => 'required|unique:students,student_id,' . $student->id,
@@ -90,7 +103,11 @@ class StudentController extends Controller
      */
     public function destroy(Student $student)
     {
-        $this->authorize('delete', $student);
+        // Check if student belongs to authenticated teacher
+        if ($student->teacher_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         $student->delete();
 
         return redirect()->route('students.index')->with('success', 'Student deleted successfully.');

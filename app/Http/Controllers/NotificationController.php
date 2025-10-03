@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class NotificationController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */
@@ -38,7 +40,11 @@ class NotificationController extends Controller
      */
     public function markAsRead(Notification $notification)
     {
-        $this->authorize('update', $notification);
+        // Check if notification belongs to authenticated teacher
+        if ($notification->teacher_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         $notification->update(['is_read' => true]);
 
         return back()->with('success', 'Notification marked as read.');
@@ -49,7 +55,11 @@ class NotificationController extends Controller
      */
     public function destroy(Notification $notification)
     {
-        $this->authorize('delete', $notification);
+        // Check if notification belongs to authenticated teacher
+        if ($notification->teacher_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         $notification->delete();
 
         return back()->with('success', 'Notification deleted successfully.');
