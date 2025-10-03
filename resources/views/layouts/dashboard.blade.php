@@ -78,7 +78,7 @@
                         </div>
                         <div class="ml-3 flex-1 min-w-0">
                             <p class="text-sm font-medium text-white truncate">{{ auth()->user()->name }}</p>
-                            <p class="text-xs text-gray-400 truncate">Computer Engineering</p>
+                            <p class="text-xs text-gray-400 truncate">{{ ucfirst(auth()->user()->role) }}</p>
                         </div>
                         <form method="POST" action="{{ route('logout') }}" class="inline">
                             @csrf

@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -60,5 +61,21 @@ class User extends Authenticatable
     public function notifications()
     {
         return $this->hasMany(Notification::class, 'teacher_id');
+    }
+
+    /**
+     * Check if user is an admin.
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
+     * Check if user is a teacher.
+     */
+    public function isTeacher(): bool
+    {
+        return $this->role === 'teacher';
     }
 }

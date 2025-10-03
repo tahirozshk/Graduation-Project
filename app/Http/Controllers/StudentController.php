@@ -15,7 +15,16 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $students = Auth::user()->students()->with('projects')->get();
+        $user = Auth::user();
+        
+        if ($user->isAdmin()) {
+            // Admin sees all students
+            $students = Student::with('projects', 'teacher')->get();
+        } else {
+            // Teacher sees only their own students
+            $students = $user->students()->with('projects')->get();
+        }
+        
         return view('students.index', compact('students'));
     }
 
@@ -52,12 +61,14 @@ class StudentController extends Controller
      */
     public function show(Student $student)
     {
-        // Check if student belongs to authenticated teacher
-        if ($student->teacher_id !== Auth::id()) {
+        $user = Auth::user();
+        
+        // Check if student belongs to authenticated teacher (unless admin)
+        if (!$user->isAdmin() && $student->teacher_id !== $user->id) {
             abort(403, 'Unauthorized action.');
         }
         
-        $student->load('projects.reports');
+        $student->load('projects.reports', 'teacher');
         return view('students.show', compact('student'));
     }
 
@@ -66,8 +77,10 @@ class StudentController extends Controller
      */
     public function edit(Student $student)
     {
-        // Check if student belongs to authenticated teacher
-        if ($student->teacher_id !== Auth::id()) {
+        $user = Auth::user();
+        
+        // Check if student belongs to authenticated teacher (unless admin)
+        if (!$user->isAdmin() && $student->teacher_id !== $user->id) {
             abort(403, 'Unauthorized action.');
         }
         
@@ -79,8 +92,10 @@ class StudentController extends Controller
      */
     public function update(Request $request, Student $student)
     {
-        // Check if student belongs to authenticated teacher
-        if ($student->teacher_id !== Auth::id()) {
+        $user = Auth::user();
+        
+        // Check if student belongs to authenticated teacher (unless admin)
+        if (!$user->isAdmin() && $student->teacher_id !== $user->id) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -103,8 +118,10 @@ class StudentController extends Controller
      */
     public function destroy(Student $student)
     {
-        // Check if student belongs to authenticated teacher
-        if ($student->teacher_id !== Auth::id()) {
+        $user = Auth::user();
+        
+        // Check if student belongs to authenticated teacher (unless admin)
+        if (!$user->isAdmin() && $student->teacher_id !== $user->id) {
             abort(403, 'Unauthorized action.');
         }
         

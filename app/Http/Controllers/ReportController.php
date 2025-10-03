@@ -14,9 +14,17 @@ class ReportController extends Controller
      */
     public function index()
     {
-        $reports = Report::whereHas('project.student', function ($query) {
-            $query->where('teacher_id', Auth::id());
-        })->with('project.student')->get();
+        $user = Auth::user();
+        
+        if ($user->isAdmin()) {
+            // Admin sees all reports
+            $reports = Report::with('project.student.teacher')->get();
+        } else {
+            // Teacher sees only reports from their students' projects
+            $reports = Report::whereHas('project.student', function ($query) use ($user) {
+                $query->where('teacher_id', $user->id);
+            })->with('project.student')->get();
+        }
 
         return view('reports.index', compact('reports'));
     }
@@ -26,9 +34,17 @@ class ReportController extends Controller
      */
     public function create()
     {
-        $projects = Project::whereHas('student', function ($query) {
-            $query->where('teacher_id', Auth::id());
-        })->with('student')->get();
+        $user = Auth::user();
+        
+        if ($user->isAdmin()) {
+            // Admin can create reports for all projects
+            $projects = Project::with('student')->get();
+        } else {
+            // Teacher can create reports only for their students' projects
+            $projects = Project::whereHas('student', function ($query) use ($user) {
+                $query->where('teacher_id', $user->id);
+            })->with('student')->get();
+        }
 
         return view('reports.create', compact('projects'));
     }
@@ -66,9 +82,17 @@ class ReportController extends Controller
      */
     public function edit(Report $report)
     {
-        $projects = Project::whereHas('student', function ($query) {
-            $query->where('teacher_id', Auth::id());
-        })->with('student')->get();
+        $user = Auth::user();
+        
+        if ($user->isAdmin()) {
+            // Admin can edit any report
+            $projects = Project::with('student')->get();
+        } else {
+            // Teacher can edit only reports from their students' projects
+            $projects = Project::whereHas('student', function ($query) use ($user) {
+                $query->where('teacher_id', $user->id);
+            })->with('student')->get();
+        }
 
         return view('reports.edit', compact('report', 'projects'));
     }

@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
 @section('title', 'Dashboard')
-@section('subtitle', 'Overview of your project management activities')
+@section('subtitle', Auth::user()->isAdmin() ? 'Overview of all project management activities' : 'Overview of your project management activities')
 
 @section('content')
 <div class="space-y-6">

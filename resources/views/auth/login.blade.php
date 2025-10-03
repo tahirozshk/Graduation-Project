@@ -100,6 +100,16 @@
                     </button>
                 </form>
 
+                <!-- Register Link -->
+                <div class="mt-6 text-center">
+                    <p class="text-sm text-gray-600">
+                        Don't have an account? 
+                        <a href="{{ route('register') }}" class="font-semibold hover:underline" style="color: #7A001E;">
+                            Create an account
+                        </a>
+                    </p>
+                </div>
+
                 <!-- Demo Credentials -->
                 <div class="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
                     <p class="text-xs font-semibold text-gray-600 mb-2">Demo Login Credentials:</p>

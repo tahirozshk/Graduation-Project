@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
 @section('title', 'Students')
-@section('subtitle', 'Manage your supervised students')
+@section('subtitle', Auth::user()->isAdmin() ? 'Manage all students in the system' : 'Manage your supervised students')
 
 @section('header-actions')
     <a href="{{ route('students.create') }}" class="px-5 py-2.5 text-white text-sm font-medium rounded-lg hover:opacity-90 transition-opacity flex items-center shadow-sm" style="background-color: #7A001E;">
@@ -40,6 +40,9 @@
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Student</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Student ID</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Contact</th>
+                        @if(Auth::user()->isAdmin())
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Teacher</th>
+                        @endif
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Year & Department</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Assigned Projects</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
@@ -75,6 +78,12 @@
                                     {{ $student->email }}
                                 </div>
                             </td>
+                            @if(Auth::user()->isAdmin())
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">{{ $student->teacher->name ?? 'N/A' }}</div>
+                                    <div class="text-xs text-gray-500">{{ $student->teacher->email ?? '' }}</div>
+                                </td>
+                            @endif
                             <td class="px-6 py-4">
                                 <div class="text-sm text-gray-900">{{ $student->year }}th Year</div>
                                 <div class="text-xs text-gray-500">{{ $student->department }}</div>
@@ -100,7 +109,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-6 py-12 text-center">
+                            <td colspan="{{ Auth::user()->isAdmin() ? '8' : '7' }}" class="px-6 py-12 text-center">
                                 <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
                                 </svg>

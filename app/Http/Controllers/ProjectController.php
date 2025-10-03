@@ -14,9 +14,17 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Project::whereHas('student', function ($query) {
-            $query->where('teacher_id', Auth::id());
-        })->with('student', 'reports')->get();
+        $user = Auth::user();
+        
+        if ($user->isAdmin()) {
+            // Admin sees all projects
+            $projects = Project::with('student.teacher', 'reports')->get();
+        } else {
+            // Teacher sees only their students' projects
+            $projects = Project::whereHas('student', function ($query) use ($user) {
+                $query->where('teacher_id', $user->id);
+            })->with('student', 'reports')->get();
+        }
 
         return view('projects.index', compact('projects'));
     }
@@ -26,7 +34,16 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        $students = Auth::user()->students;
+        $user = Auth::user();
+        
+        if ($user->isAdmin()) {
+            // Admin can create projects for all students
+            $students = Student::all();
+        } else {
+            // Teacher can create projects only for their students
+            $students = $user->students;
+        }
+        
         return view('projects.create', compact('students'));
     }
 
@@ -65,7 +82,16 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        $students = Auth::user()->students;
+        $user = Auth::user();
+        
+        if ($user->isAdmin()) {
+            // Admin can edit any project
+            $students = Student::all();
+        } else {
+            // Teacher can edit only their students' projects
+            $students = $user->students;
+        }
+        
         return view('projects.edit', compact('project', 'students'));
     }
 
