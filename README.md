@@ -1,6 +1,6 @@
-# 🎓 YDU Project Management System (PMS)
+# 🎓 NEU Project Management System (PMS)
 
-Modern ve profesyonel bir **Öğretmen & Admin Proje Yönetim Sistemi** - Yeditepe Üniversitesi için geliştirilmiştir.
+Modern ve profesyonel bir **Öğretmen & Admin Proje Yönetim Sistemi** - Yakın Doğu Üniversitesi için geliştirilmiştir.
 
 ![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)
 ![Laravel](https://img.shields.io/badge/Laravel-11-red.svg)
@@ -24,7 +24,7 @@ Modern ve profesyonel bir **Öğretmen & Admin Proje Yönetim Sistemi** - Yedite
 
 ## 🎯 Proje Hakkında
 
-**YDU Project Management System**, öğretmenlerin öğrenci projelerini takip etmesini, raporları değerlendirmesini ve proje süreçlerini yönetmesini sağlayan kapsamlı bir web uygulamasıdır. Admin paneli ile tüm sistemi merkezi olarak yönetebilirsiniz.
+**NEU Project Management System**, öğretmenlerin öğrenci projelerini takip etmesini, raporları değerlendirmesini ve proje süreçlerini yönetmesini sağlayan kapsamlı bir web uygulamasıdır. Admin paneli ile tüm sistemi merkezi olarak yönetebilirsiniz.
 
 ### Sistem Amacı:
 - 👨‍🏫 Öğretmenlerin öğrenci projelerini merkezi bir platformdan yönetmesi
@@ -62,13 +62,13 @@ Modern ve profesyonel bir **Öğretmen & Admin Proje Yönetim Sistemi** - Yedite
 - **Git** - Versiyon kontrol sistemi
 
 ### Tasarım
-- **YDU Kurumsal Renkleri**
+- **NEU Kurumsal Renkleri**
   - Primary: `#7A001E` (Bordo)
   - Secondary: `#2E2E2E` (Koyu Gri)
   - Background: `#F5F5F5` (Açık Gri)
 - **Responsive Design** - Mobil, tablet ve masaüstü uyumlu
 - **Modern UI/UX** - Kullanıcı dostu arayüz
-- **Custom YDU Logo** - Kurumsal görsel kimlik
+- **Custom NEU Logo** - Kurumsal görsel kimlik
 
 ---
 
@@ -284,9 +284,9 @@ Tarayıcınızda `http://localhost:8000` adresini açın.
 ### Giriş Bilgileri (Demo)
 
 **Teacher Hesapları:**
-- Email: `ahmed.hassan@ydu.edu.tr` | Şifre: `password`
-- Email: `fatima.yilmaz@ydu.edu.tr` | Şifre: `password`
-- Email: `mehmet.demir@ydu.edu.tr` | Şifre: `password`
+- Email: `ahmed.hassan@neu.edu.tr` | Şifre: `password`
+- Email: `fatima.yilmaz@neu.edu.tr` | Şifre: `password`
+- Email: `mehmet.demir@neu.edu.tr` | Şifre: `password`
 
 **Admin Hesabı:**
 İlk admin hesabını kayıt sayfasından oluşturun:
@@ -329,7 +329,7 @@ Seeder ile oluşturulan örnek veriler:
 
 ### Login Sayfası
 Modern ve güvenli giriş ekranı
-- YDU gradient arka plan
+- NEU gradient arka plan
 - Modern input alanları
 - "Create an account" linki
 - Demo credentials görünümü
@@ -675,7 +675,7 @@ DELETE /notifications/{id}         - Bildirim sil
 
 ## 🤝 Katkıda Bulunma
 
-Bu proje Yeditepe Üniversitesi Bilgisayar Mühendisliği bölümü bitirme projesi olarak geliştirilmiştir.
+Bu proje Yakın Doğu Üniversitesi Bilgisayar Mühendisliği bölümü bitirme projesi olarak geliştirilmiştir.
 
 ---
 
@@ -688,7 +688,7 @@ Bu proje MIT lisansı altında lisanslanmıştır.
 ## 👨‍💻 Geliştirici
 
 **Graduation Project 2025**  
-Yeditepe University  
+Near East University (Yakın Doğu Üniversitesi)  
 Computer Engineering Department
 
 ---
@@ -705,7 +705,7 @@ Sorularınız için lütfen proje yöneticisi ile iletişime geçin.
 - TailwindCSS
 - Alpine.js
 - Heroicons
-- Yeditepe Üniversitesi
+- Yakın Doğu Üniversitesi (Near East University)
 
 ---
 
@@ -729,6 +729,6 @@ Sorularınız için lütfen proje yöneticisi ile iletişime geçin.
 
 ---
 
-**🎓 Developed with ❤️ for Yeditepe University**
+**🎓 Developed with ❤️ for Near East University**
 
 **Version 2.0.0** - Rol Tabanlı Sistem & Admin Paneli

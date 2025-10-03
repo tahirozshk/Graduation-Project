@@ -17,11 +17,8 @@
             <!-- Logo and Header -->
             <div class="text-center">
                 <div class="flex justify-center mb-6">
-                    <div class="w-20 h-20 rounded-2xl flex items-center justify-center text-white text-3xl font-bold" style="background-color: #7A001E; box-shadow: 0 10px 40px rgba(122, 0, 30, 0.3);">
-                        YDU
-                    </div>
+                    <img src="{{ asset('build/assets/ydu-logo.svg') }}" alt="NEU Logo" class="w-40 h-40 object-contain">
                 </div>
-                <h2 class="text-3xl font-bold text-white mb-2">YDU PMS</h2>
                 <p class="text-gray-300 text-sm">Project Management System</p>
                 <p class="text-gray-400 text-xs mt-4">Teacher Portal</p>
             </div>
@@ -52,7 +49,7 @@
                             <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus 
                                    class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent @error('email') border-red-500 @enderror" 
                                    style="focus:ring-color: #7A001E;"
-                                   placeholder="teacher@ydu.edu.tr">
+                                   placeholder="teacher@neu.edu.tr">
                         </div>
                         @error('email')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -113,14 +110,14 @@
                 <!-- Demo Credentials -->
                 <div class="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
                     <p class="text-xs font-semibold text-gray-600 mb-2">Demo Login Credentials:</p>
-                    <p class="text-xs text-gray-600">Email: <span class="font-mono">ahmed.hassan@ydu.edu.tr</span></p>
+                    <p class="text-xs text-gray-600">Email: <span class="font-mono">ahmed.hassan@neu.edu.tr</span></p>
                     <p class="text-xs text-gray-600">Password: <span class="font-mono">password</span></p>
                 </div>
             </div>
 
             <!-- Footer -->
             <p class="text-center text-sm text-gray-300 mt-4">
-                © 2025 Yeditepe University. All rights reserved.
+                © 2025 Near East University. All rights reserved.
             </p>
         </div>
     </div>
