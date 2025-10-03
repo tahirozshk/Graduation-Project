@@ -1,61 +1,549 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🎓 YDU Project Management System (PMS)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Modern ve profesyonel bir **Öğretmen Proje Yönetim Sistemi** - Yeditepe Üniversitesi için geliştirilmiştir.
 
-## About Laravel
+![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Laravel](https://img.shields.io/badge/Laravel-11-red.svg)
+![PHP](https://img.shields.io/badge/PHP-8.2-purple.svg)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 📋 İçindekiler
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- [Proje Hakkında](#-proje-hakkında)
+- [Teknolojiler](#-teknolojiler)
+- [Özellikler](#-özellikler)
+- [Kurulum](#-kurulum)
+- [Kullanım](#-kullanım)
+- [Ekran Görüntüleri](#-ekran-görüntüleri)
+- [Veritabanı Şeması](#-veritabanı-şeması)
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 🎯 Proje Hakkında
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+**YDU Project Management System**, öğretmenlerin öğrenci projelerini takip etmesini, raporları değerlendirmesini ve proje süreçlerini yönetmesini sağlayan kapsamlı bir web uygulamasıdır.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Sistem Amacı:
+- 👨‍🏫 Öğretmenlerin öğrenci projelerini merkezi bir platformdan yönetmesi
+- 📊 Proje ilerlemelerinin gerçek zamanlı takibi
+- 📝 Haftalık rapor değerlendirmeleri ve notlandırma
+- 🔔 Önemli tarihler ve teslimler için bildirim sistemi
+- 📈 İstatistiksel raporlar ve görselleştirmeler
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 🛠️ Teknolojiler
 
-### Premium Partners
+### Backend
+- **PHP 8.2+** - Sunucu tarafı programlama dili
+- **Laravel 11** - Modern PHP framework
+  - Eloquent ORM - Veritabanı ilişkileri
+  - Blade Templates - Şablon motoru
+  - Laravel Breeze - Kimlik doğrulama
+  - Sanctum - API token yönetimi
+- **MySQL/SQLite** - İlişkisel veritabanı
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### Frontend
+- **HTML5** - Sayfa yapısı
+- **TailwindCSS 3** - Utility-first CSS framework
+- **JavaScript (ES6+)** - Dinamik interaktivite
+- **TypeScript 5** - Tip güvenli JavaScript
+- **Alpine.js** - Hafif JavaScript framework
+- **Vite** - Modern build tool
 
-## Contributing
+### Geliştirme Araçları
+- **Composer** - PHP bağımlılık yöneticisi
+- **NPM** - JavaScript paket yöneticisi
+- **Git** - Versiyon kontrol sistemi
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Tasarım
+- **YDU Kurumsal Renkleri**
+  - Primary: `#7A001E` (Bordo)
+  - Secondary: `#2E2E2E` (Koyu Gri)
+  - Background: `#F5F5F5` (Açık Gri)
+- **Responsive Design** - Mobil, tablet ve masaüstü uyumlu
+- **Modern UI/UX** - Kullanıcı dostu arayüz
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## ✨ Özellikler
 
-## Security Vulnerabilities
+### 🔐 Kimlik Doğrulama
+- ✅ Güvenli öğretmen girişi
+- ✅ Şifre sıfırlama
+- ✅ Oturum yönetimi
+- ✅ Rol tabanlı yetkilendirme
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 👥 Öğrenci Yönetimi
+- ✅ Öğrenci ekleme, düzenleme, silme
+- ✅ Öğrenci detay sayfaları
+- ✅ Aktif/Pasif durum yönetimi
+- ✅ Bölüm ve yıl bilgileri
+- ✅ Gelişmiş arama ve filtreleme
+- ✅ Proje atama
 
-## License
+### 📁 Proje Yönetimi
+- ✅ Proje oluşturma ve düzenleme
+- ✅ İki proje tipi: Araştırma / Geliştirme
+- ✅ İlerleme takibi (% progress bar)
+- ✅ Durum yönetimi:
+  - Planning (Planlama)
+  - In Progress (Devam Ediyor)
+  - Review (İnceleme)
+  - Completed (Tamamlandı)
+- ✅ Başlangıç ve bitiş tarihleri
+- ✅ Proje detay sayfaları
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 📝 Rapor Sistemi
+- ✅ Haftalık rapor girişi
+- ✅ Rapor durumları:
+  - Submitted (Teslim Edildi)
+  - Review (İnceleniyor)
+  - Overdue (Gecikmiş)
+- ✅ Notlandırma sistemi (A, A-, B+, vb.)
+- ✅ Rapor içeriği ve yorumlar
+- ✅ Teslim tarihi takibi
+
+### 🔔 Bildirim Sistemi
+- ✅ Gerçek zamanlı bildirimler
+- ✅ Bildirim tipleri:
+  - Deadline (Son tarih)
+  - Overdue (Gecikmiş)
+  - System (Sistem)
+  - Reminder (Hatırlatma)
+- ✅ Okundu/Okunmadı işaretleme
+- ✅ Bildirim filtreleme
+
+### 📊 Dashboard & Raporlama
+- ✅ İstatistik kartları
+- ✅ Son projeler listesi
+- ✅ Yaklaşan son tarihler
+- ✅ Grafik ve görselleştirmeler
+- ✅ Özet bilgiler
+
+### 🔍 Arama & Filtreleme
+- ✅ Anlık arama (live search)
+- ✅ Çoklu filtreleme seçenekleri
+- ✅ JavaScript tabanlı client-side filtering
+- ✅ Performans optimizasyonu
+
+### 🎨 Kullanıcı Arayüzü
+- ✅ Modern ve profesyonel tasarım
+- ✅ Responsive layout (mobil uyumlu)
+- ✅ Sidebar navigasyon
+- ✅ Card ve table görünümleri
+- ✅ Progress bar'lar
+- ✅ Status badge'leri
+- ✅ Icon'lar ve görsel elementler
+- ✅ Smooth transitions ve animasyonlar
+
+---
+
+## 🚀 Kurulum
+
+### Gereksinimler
+- PHP >= 8.2
+- Composer
+- Node.js >= 18.x
+- npm veya yarn
+- MySQL veya SQLite
+
+### Adım 1: Projeyi İndirin
+```bash
+git clone <repository-url>
+cd "Graduation Project"
+```
+
+### Adım 2: PHP Bağımlılıklarını Yükleyin
+```bash
+composer install
+```
+
+### Adım 3: JavaScript Bağımlılıklarını Yükleyin
+```bash
+npm install
+```
+
+### Adım 4: Ortam Dosyasını Oluşturun
+```bash
+copy .env.example .env
+```
+
+### Adım 5: Uygulama Anahtarı Oluşturun
+```bash
+php artisan key:generate
+```
+
+### Adım 6: Veritabanını Yapılandırın
+`.env` dosyasında veritabanı ayarlarını düzenleyin:
+
+**SQLite için (önerilen):**
+```env
+DB_CONNECTION=sqlite
+```
+
+**MySQL için:**
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=ydu_pms
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+### Adım 7: Veritabanı Tablolarını Oluşturun
+```bash
+php artisan migrate
+```
+
+### Adım 8: Örnek Verileri Yükleyin
+```bash
+php artisan db:seed
+```
+
+### Adım 9: Frontend Varlıklarını Derleyin
+**Geliştirme için:**
+```bash
+npm run dev
+```
+
+**Üretim için:**
+```bash
+npm run build
+```
+
+### Adım 10: Sunucuyu Başlatın
+```bash
+php artisan serve
+```
+
+Tarayıcınızda `http://localhost:8000` adresini açın.
+
+---
+
+## 👤 Kullanım
+
+### Giriş Bilgileri (Demo)
+
+Sistem 3 demo öğretmen hesabı ile gelir:
+
+**Öğretmen 1:**
+- Email: `ahmed.hassan@ydu.edu.tr`
+- Şifre: `password`
+
+**Öğretmen 2:**
+- Email: `fatima.yilmaz@ydu.edu.tr`
+- Şifre: `password`
+
+**Öğretmen 3:**
+- Email: `mehmet.demir@ydu.edu.tr`
+- Şifre: `password`
+
+### Demo Veriler
+Seeder ile oluşturulan örnek veriler:
+- ✅ 3 Öğretmen
+- ✅ 10 Öğrenci
+- ✅ 5 Proje
+- ✅ 10 Rapor
+- ✅ 6 Bildirim
+
+---
+
+## 📸 Ekran Görüntüleri
+
+### Login Sayfası
+Modern ve güvenli giriş ekranı
+
+### Dashboard
+İstatistikler, son projeler ve bildirimler
+
+### Öğrenci Listesi
+Tablo görünümü ile öğrenci yönetimi
+
+### Proje Kartları
+Card görünümü ile proje takibi
+
+### Raporlar
+Detaylı rapor tablosu ve notlandırma
+
+### Bildirimler
+Gerçek zamanlı bildirim sistemi
+
+---
+
+## 🗄️ Veritabanı Şeması
+
+### Users (Teachers) Tablosu
+```
+- id (PK)
+- name
+- email (unique)
+- password (hashed)
+- email_verified_at
+- remember_token
+- created_at
+- updated_at
+```
+
+### Students Tablosu
+```
+- id (PK)
+- student_id (unique)
+- teacher_id (FK → users.id)
+- name
+- email (unique)
+- year
+- department
+- status (active/inactive)
+- created_at
+- updated_at
+```
+
+### Projects Tablosu
+```
+- id (PK)
+- student_id (FK → students.id)
+- title
+- description
+- project_type (Research/Development)
+- start_date
+- end_date
+- progress (0-100)
+- status (Planning/In Progress/Review/Completed)
+- created_at
+- updated_at
+```
+
+### Reports Tablosu
+```
+- id (PK)
+- project_id (FK → projects.id)
+- week_number
+- content
+- submission_date
+- status (Submitted/Review/Overdue)
+- grade (nullable)
+- created_at
+- updated_at
+```
+
+### Notifications Tablosu
+```
+- id (PK)
+- teacher_id (FK → users.id)
+- message
+- type (deadline/overdue/system/reminder)
+- is_read (boolean)
+- created_at
+- updated_at
+```
+
+### İlişkiler
+```
+Teacher (User) → hasMany → Students
+Student → belongsTo → Teacher
+Student → hasMany → Projects
+Project → belongsTo → Student
+Project → hasMany → Reports
+Report → belongsTo → Project
+Teacher → hasMany → Notifications
+Notification → belongsTo → Teacher
+```
+
+---
+
+## 🔧 Geliştirme
+
+### Cache Temizleme
+```bash
+php artisan cache:clear
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+```
+
+### Veritabanını Sıfırlama
+```bash
+php artisan migrate:fresh --seed
+```
+
+### Kod Formatı
+```bash
+./vendor/bin/pint
+```
+
+### Test Çalıştırma
+```bash
+php artisan test
+```
+
+---
+
+## 📂 Proje Yapısı
+
+```
+├── app/
+│   ├── Http/Controllers/     # Controller'lar
+│   │   ├── DashboardController.php
+│   │   ├── StudentController.php
+│   │   ├── ProjectController.php
+│   │   ├── ReportController.php
+│   │   └── NotificationController.php
+│   ├── Models/               # Eloquent Model'ler
+│   │   ├── User.php
+│   │   ├── Student.php
+│   │   ├── Project.php
+│   │   ├── Report.php
+│   │   └── Notification.php
+│   └── Policies/             # Authorization Policy'leri
+│       ├── StudentPolicy.php
+│       └── NotificationPolicy.php
+├── database/
+│   ├── migrations/           # Veritabanı migration'ları
+│   └── seeders/              # Seed dosyaları
+├── resources/
+│   ├── css/                  # CSS dosyaları
+│   ├── js/                   # JavaScript/TypeScript
+│   │   ├── app.js
+│   │   └── dashboard.ts
+│   └── views/                # Blade şablonları
+│       ├── auth/             # Giriş sayfaları
+│       ├── layouts/          # Layout şablonları
+│       ├── students/         # Öğrenci sayfaları
+│       ├── projects/         # Proje sayfaları
+│       ├── reports/          # Rapor sayfaları
+│       └── notifications/    # Bildirim sayfaları
+├── routes/
+│   ├── web.php               # Web route'ları
+│   ├── api.php               # API route'ları
+│   └── auth.php              # Auth route'ları
+├── public/                   # Public dosyalar
+├── composer.json             # PHP bağımlılıkları
+├── package.json              # JS bağımlılıkları
+├── tsconfig.json             # TypeScript ayarları
+├── tailwind.config.js        # TailwindCSS ayarları
+└── vite.config.js            # Vite ayarları
+```
+
+---
+
+## 🎨 Tasarım Sistemi
+
+### Renk Paleti
+```css
+Primary:    #7A001E  /* YDU Bordo */
+Secondary:  #2E2E2E  /* Koyu Gri */
+Background: #F5F5F5  /* Açık Gri */
+White:      #FFFFFF  /* Beyaz */
+```
+
+### Status Renkleri
+```css
+Success:  #10B981  /* Yeşil - Completed, Active */
+Warning:  #F59E0B  /* Turuncu - Review, Pending */
+Danger:   #EF4444  /* Kırmızı - Overdue, Inactive */
+Info:     #3B82F6  /* Mavi - In Progress */
+```
+
+---
+
+## 🔒 Güvenlik
+
+- ✅ CSRF koruması
+- ✅ XSS koruması
+- ✅ SQL Injection koruması (Eloquent ORM)
+- ✅ Şifre hashleme (bcrypt)
+- ✅ Authentication middleware
+- ✅ Authorization policies
+- ✅ Rate limiting
+- ✅ Secure session management
+
+---
+
+## 📝 API Endpoints
+
+### Authentication
+```
+POST   /login           - Giriş yap
+POST   /logout          - Çıkış yap
+POST   /forgot-password - Şifre sıfırlama isteği
+```
+
+### Students API
+```
+GET    /api/students           - Tüm öğrencileri listele
+POST   /api/students           - Yeni öğrenci ekle
+GET    /api/students/{id}      - Öğrenci detayı
+PUT    /api/students/{id}      - Öğrenci güncelle
+DELETE /api/students/{id}      - Öğrenci sil
+```
+
+### Projects API
+```
+GET    /api/projects           - Tüm projeleri listele
+POST   /api/projects           - Yeni proje ekle
+GET    /api/projects/{id}      - Proje detayı
+PUT    /api/projects/{id}      - Proje güncelle
+DELETE /api/projects/{id}      - Proje sil
+```
+
+### Reports API
+```
+GET    /api/reports            - Tüm raporları listele
+POST   /api/reports            - Yeni rapor ekle
+GET    /api/reports/{id}       - Rapor detayı
+PUT    /api/reports/{id}       - Rapor güncelle
+DELETE /api/reports/{id}       - Rapor sil
+```
+
+### Notifications API
+```
+GET    /api/notifications              - Tüm bildirimleri listele
+POST   /api/notifications              - Yeni bildirim ekle
+PATCH  /api/notifications/{id}/read    - Okundu işaretle
+DELETE /api/notifications/{id}         - Bildirim sil
+```
+
+---
+
+## 🤝 Katkıda Bulunma
+
+Bu proje Yeditepe Üniversitesi Bilgisayar Mühendisliği bölümü bitirme projesi olarak geliştirilmiştir.
+
+---
+
+## 📄 Lisans
+
+Bu proje MIT lisansı altında lisanslanmıştır.
+
+---
+
+## 👨‍💻 Geliştirici
+
+**Graduation Project 2025**  
+Yeditepe University  
+Computer Engineering Department
+
+---
+
+## 📞 İletişim
+
+Sorularınız için lütfen proje yöneticisi ile iletişime geçin.
+
+---
+
+## 🙏 Teşekkürler
+
+- Laravel Framework
+- TailwindCSS
+- Alpine.js
+- Heroicons
+- Yeditepe Üniversitesi
+
+---
+
+**🎓 Developed with ❤️ for Yeditepe University**
