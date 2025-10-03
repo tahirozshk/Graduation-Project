@@ -17,14 +17,8 @@
         <aside class="w-64 flex-shrink-0 bg-gradient-to-b from-gray-900 to-gray-800 shadow-2xl">
             <div class="h-full flex flex-col">
                 <!-- Logo -->
-                <div class="flex items-center px-6 py-6 border-b border-gray-700">
-                    <div class="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-xl" style="background-color: #7A001E;">
-                        YDU
-                    </div>
-                    <div class="ml-3">
-                        <h1 class="text-lg font-bold text-white">YDU PMS</h1>
-                        <p class="text-xs text-gray-400">Project Management</p>
-                    </div>
+                <div class="flex items-center justify-center px-6 py-6 border-b border-gray-700">
+                    <img src="{{ asset('build/assets/ydu-logo.svg') }}" alt="YDU Logo" class="w-32 h-auto object-contain">
                 </div>
                 
                 <!-- Navigation -->
