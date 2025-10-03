@@ -21,20 +21,26 @@ class DatabaseSeeder extends Seeder
         $teachers = [];
         $teachers[] = User::create([
             'name' => 'Dr. Ahmed Hassan',
-            'email' => 'ahmed.hassan@ydu.edu.tr',
+            'email' => 'ahmed.hassan@neu.edu.tr',
             'password' => Hash::make('password'),
+            'role' => 'teacher',
+            'status' => 'active',
         ]);
 
         $teachers[] = User::create([
             'name' => 'Dr. Fatima Yilmaz',
-            'email' => 'fatima.yilmaz@ydu.edu.tr',
+            'email' => 'fatima.yilmaz@neu.edu.tr',
             'password' => Hash::make('password'),
+            'role' => 'teacher',
+            'status' => 'active',
         ]);
 
         $teachers[] = User::create([
             'name' => 'Dr. Mehmet Demir',
-            'email' => 'mehmet.demir@ydu.edu.tr',
+            'email' => 'mehmet.demir@neu.edu.tr',
             'password' => Hash::make('password'),
+            'role' => 'teacher',
+            'status' => 'active',
         ]);
 
         // Create 10 Students
@@ -47,7 +53,7 @@ class DatabaseSeeder extends Seeder
                 'student_id' => '202100' . str_pad($i, 2, '0', STR_PAD_LEFT),
                 'teacher_id' => $teachers[array_rand($teachers)]->id,
                 'name' => 'Student ' . $i,
-                'email' => 'student' . $i . '@ydu.edu.tr',
+                'email' => 'student' . $i . '@neu.edu.tr',
                 'year' => $years[array_rand($years)],
                 'department' => $departments[array_rand($departments)],
                 'status' => $i <= 8 ? 'active' : 'inactive',
