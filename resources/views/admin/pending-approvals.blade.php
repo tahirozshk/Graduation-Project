@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
 @section('title', 'Pending Approvals')
-@section('subtitle', 'Review and approve pending user registrations')
+@section('subtitle', 'Review and approve pending teacher registrations')
 
 @section('content')
 <div class="space-y-6">
@@ -18,81 +18,6 @@
         </div>
     @endif
 
-    <!-- Pending Users -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-200">
-            <h3 class="text-lg font-semibold text-gray-900">Pending User Approvals ({{ $pendingUsers->count() }})</h3>
-            <p class="text-sm text-gray-600 mt-1">Users waiting for approval to access the system</p>
-        </div>
-
-        @if($pendingUsers->count() > 0)
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Registration Date</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        @foreach($pendingUsers as $user)
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold text-sm bg-blue-500">
-                                            {{ substr($user->name, 0, 1) }}
-                                        </div>
-                                        <div class="ml-4">
-                                            <div class="text-sm font-medium text-gray-900">{{ $user->name }}</div>
-                                            <div class="text-sm text-gray-500">{{ $user->email }}</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                        {{ $user->role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-green-100 text-green-800' }}">
-                                        {{ ucfirst($user->role) }}
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {{ $user->created_at->format('M d, Y H:i') }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                                    <form action="{{ route('admin.approve-user', $user) }}" method="POST" class="inline">
-                                        @csrf
-                                        <button type="submit" 
-                                                class="text-green-600 hover:text-green-900 bg-green-50 hover:bg-green-100 px-3 py-1 rounded-md text-sm font-medium transition-colors">
-                                            Approve
-                                        </button>
-                                    </form>
-                                    <form action="{{ route('admin.reject-user', $user) }}" method="POST" class="inline">
-                                        @csrf
-                                        <button type="submit" 
-                                                class="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-3 py-1 rounded-md text-sm font-medium transition-colors"
-                                                onclick="return confirm('Are you sure you want to reject this user?')">
-                                            Reject
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        @else
-            <div class="px-6 py-8 text-center">
-                <div class="text-gray-400 mb-2">
-                    <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                </div>
-                <h3 class="text-sm font-medium text-gray-900 mb-1">No pending users</h3>
-                <p class="text-sm text-gray-500">All user registrations have been processed.</p>
-            </div>
-        @endif
-    </div>
 
     <!-- Pending Teachers -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">

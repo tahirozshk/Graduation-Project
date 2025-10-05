@@ -25,16 +25,11 @@ class PendingApprovalController extends Controller
         if (!auth()->user()->isAdmin()) {
             abort(403, 'Unauthorized action.');
         }
-        $pendingUsers = User::where('status', 'pending')
-            ->where('email', '!=', 'superadmin@university.edu')
-            ->with('approver')
-            ->get();
-
         $pendingTeachers = Teacher::where('status', 'pending')
             ->with('approver')
             ->get();
 
-        return view('admin.pending-approvals', compact('pendingUsers', 'pendingTeachers'));
+        return view('admin.pending-approvals', compact('pendingTeachers'));
     }
 
     /**

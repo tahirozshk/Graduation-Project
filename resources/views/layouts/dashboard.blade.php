@@ -95,7 +95,7 @@
                             </svg>
                             Pending Approvals
                             @php
-                                $pendingCount = \App\Models\User::where('status', 'pending')->where('email', '!=', 'superadmin@university.edu')->count() + \App\Models\Teacher::where('status', 'pending')->count();
+                                $pendingCount = \App\Models\Teacher::where('status', 'pending')->count();
                             @endphp
                             @if($pendingCount > 0)
                                 <span class="ml-auto bg-yellow-600 text-white text-xs rounded-full px-2 py-0.5">
