@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use App\Models\Student;
+use App\Models\Teacher;
+use App\Models\ProjectGroup;
 use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,12 +21,18 @@ class ProjectController extends Controller
         
         if ($user->isAdmin()) {
             // Admin sees all projects
-            $projects = Project::with('student.teacher', 'reports')->get();
+            $projects = Project::with('students.teachers', 'reports')->get();
         } else {
             // Teacher sees only their students' projects
-            $projects = Project::whereHas('student', function ($query) use ($user) {
-                $query->where('teacher_id', $user->id);
-            })->with('student', 'reports')->get();
+            $teacher = Teacher::where('email', $user->email)->first();
+            if ($teacher) {
+                $studentIds = $teacher->students()->pluck('students.id');
+                $projects = Project::whereHas('students', function ($query) use ($studentIds) {
+                    $query->whereIn('students.id', $studentIds);
+                })->with('students', 'reports')->get();
+            } else {
+                $projects = collect();
+            }
         }
 
         return view('projects.index', compact('projects'));
@@ -42,7 +50,8 @@ class ProjectController extends Controller
             $students = Student::all();
         } else {
             // Teacher can create projects only for their students
-            $students = $user->students;
+            $teacher = Teacher::where('email', $user->email)->first();
+            $students = $teacher ? $teacher->students : collect();
         }
         
         return view('projects.create', compact('students'));
@@ -54,7 +63,8 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'student_id' => 'required|exists:students,id',
+            'student_ids' => 'required|array|min:1',
+            'student_ids.*' => 'exists:students,id',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'project_type' => 'required|in:Research,Development',
@@ -64,7 +74,24 @@ class ProjectController extends Controller
             'status' => 'required|in:Planning,In Progress,Review,Completed',
         ]);
 
-        $project = Project::create($validated);
+        $project = Project::create([
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'project_type' => $validated['project_type'],
+            'start_date' => $validated['start_date'],
+            'end_date' => $validated['end_date'],
+            'progress' => $validated['progress'] ?? 0,
+            'status' => $validated['status'],
+        ]);
+
+        // Create project group relationships
+        foreach ($validated['student_ids'] as $index => $studentId) {
+            ProjectGroup::create([
+                'project_id' => $project->id,
+                'student_id' => $studentId,
+                'role' => $index === 0 ? 'Leader' : 'Member', // First student is leader
+            ]);
+        }
 
         // Log this activity
         ActivityLog::create([
@@ -84,7 +111,7 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        $project->load('student', 'reports');
+        $project->load('students.teachers', 'reports');
         return view('projects.show', compact('project'));
     }
 
@@ -100,7 +127,8 @@ class ProjectController extends Controller
             $students = Student::all();
         } else {
             // Teacher can edit only their students' projects
-            $students = $user->students;
+            $teacher = Teacher::where('email', $user->email)->first();
+            $students = $teacher ? $teacher->students : collect();
         }
         
         return view('projects.edit', compact('project', 'students'));
@@ -112,7 +140,8 @@ class ProjectController extends Controller
     public function update(Request $request, Project $project)
     {
         $validated = $request->validate([
-            'student_id' => 'required|exists:students,id',
+            'student_ids' => 'required|array|min:1',
+            'student_ids.*' => 'exists:students,id',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'project_type' => 'required|in:Research,Development',
@@ -122,7 +151,25 @@ class ProjectController extends Controller
             'status' => 'required|in:Planning,In Progress,Review,Completed',
         ]);
 
-        $project->update($validated);
+        $project->update([
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'project_type' => $validated['project_type'],
+            'start_date' => $validated['start_date'],
+            'end_date' => $validated['end_date'],
+            'progress' => $validated['progress'] ?? 0,
+            'status' => $validated['status'],
+        ]);
+
+        // Update project group relationships
+        ProjectGroup::where('project_id', $project->id)->delete();
+        foreach ($validated['student_ids'] as $index => $studentId) {
+            ProjectGroup::create([
+                'project_id' => $project->id,
+                'student_id' => $studentId,
+                'role' => $index === 0 ? 'Leader' : 'Member',
+            ]);
+        }
 
         // Log this activity
         ActivityLog::create([
@@ -151,6 +198,9 @@ class ProjectController extends Controller
             'model_id' => $project->id,
             'description' => "Deleted project: {$project->title}",
         ]);
+        
+        // Delete project group relationships first
+        ProjectGroup::where('project_id', $project->id)->delete();
         
         $project->delete();
         return redirect()->route('projects.index')->with('success', 'Project deleted successfully.');

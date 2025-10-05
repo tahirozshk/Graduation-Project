@@ -18,7 +18,7 @@
                     <option value="">Choose a project</option>
                     @foreach($projects as $project)
                         <option value="{{ $project->id }}" {{ old('project_id', $report->project_id) == $project->id ? 'selected' : '' }}>
-                            {{ $project->title }} - {{ $project->student->name }}
+                            {{ $project->title }} - {{ $project->students->first()->name ?? 'No Student' }}
                         </option>
                     @endforeach
                 </select>

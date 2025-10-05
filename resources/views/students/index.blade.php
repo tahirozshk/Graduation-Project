@@ -80,8 +80,15 @@
                             </td>
                             @if(Auth::user()->isAdmin())
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">{{ $student->teacher->name ?? 'N/A' }}</div>
-                                    <div class="text-xs text-gray-500">{{ $student->teacher->email ?? '' }}</div>
+                                    @if($student->teachers->count() > 0)
+                                        @foreach($student->teachers as $teacher)
+                                            <div class="text-sm text-gray-900">{{ $teacher->name }}</div>
+                                            <div class="text-xs text-gray-500">{{ $teacher->email }}</div>
+                                            @if(!$loop->last)<br>@endif
+                                        @endforeach
+                                    @else
+                                        <div class="text-sm text-gray-400">No supervisor</div>
+                                    @endif
                                 </td>
                             @endif
                             <td class="px-6 py-4">

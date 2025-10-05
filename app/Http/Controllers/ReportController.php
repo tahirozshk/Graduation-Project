@@ -19,12 +19,18 @@ class ReportController extends Controller
         
         if ($user->isAdmin()) {
             // Admin sees all reports
-            $reports = Report::with('project.student.teacher')->get();
+            $reports = Report::with(['project.students.teachers'])->get();
         } else {
             // Teacher sees only reports from their students' projects
-            $reports = Report::whereHas('project.student', function ($query) use ($user) {
-                $query->where('teacher_id', $user->id);
-            })->with('project.student')->get();
+            $teacher = \App\Models\Teacher::where('email', $user->email)->first();
+            
+            if ($teacher) {
+                $reports = Report::whereHas('project.students.teachers', function ($query) use ($teacher) {
+                    $query->where('teachers.id', $teacher->id);
+                })->with(['project.students.teachers'])->get();
+            } else {
+                $reports = collect();
+            }
         }
 
         return view('reports.index', compact('reports'));
@@ -39,12 +45,19 @@ class ReportController extends Controller
         
         if ($user->isAdmin()) {
             // Admin can create reports for all projects
-            $projects = Project::with('student')->get();
+            $projects = Project::with('students')->get();
         } else {
             // Teacher can create reports only for their students' projects
-            $projects = Project::whereHas('student', function ($query) use ($user) {
-                $query->where('teacher_id', $user->id);
-            })->with('student')->get();
+            // First, find the teacher record by email
+            $teacher = \App\Models\Teacher::where('email', $user->email)->first();
+            
+            if ($teacher) {
+                $projects = Project::whereHas('students.teachers', function ($query) use ($teacher) {
+                    $query->where('teachers.id', $teacher->id);
+                })->with('students')->get();
+            } else {
+                $projects = collect(); // No projects if teacher not found
+            }
         }
 
         return view('reports.create', compact('projects'));
@@ -84,7 +97,7 @@ class ReportController extends Controller
      */
     public function show(Report $report)
     {
-        $report->load('project.student');
+        $report->load(['project.students.teachers']);
         return view('reports.show', compact('report'));
     }
 
@@ -97,12 +110,18 @@ class ReportController extends Controller
         
         if ($user->isAdmin()) {
             // Admin can edit any report
-            $projects = Project::with('student')->get();
+            $projects = Project::with(['students.teachers'])->get();
         } else {
             // Teacher can edit only reports from their students' projects
-            $projects = Project::whereHas('student', function ($query) use ($user) {
-                $query->where('teacher_id', $user->id);
-            })->with('student')->get();
+            $teacher = \App\Models\Teacher::where('email', $user->email)->first();
+            
+            if ($teacher) {
+                $projects = Project::whereHas('students.teachers', function ($query) use ($teacher) {
+                    $query->where('teachers.id', $teacher->id);
+                })->with(['students.teachers'])->get();
+            } else {
+                $projects = collect();
+            }
         }
 
         return view('reports.edit', compact('report', 'projects'));

@@ -15,9 +15,10 @@
                 <select id="project_id" name="project_id" required
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent @error('project_id') border-red-500 @enderror">
                     <option value="">Choose a project</option>
+                    <!-- Debug: Projects count: {{ $projects->count() }} -->
                     @foreach($projects as $project)
                         <option value="{{ $project->id }}" {{ old('project_id') == $project->id ? 'selected' : '' }}>
-                            {{ $project->title }} - {{ $project->student->name }}
+                            {{ $project->title }} - {{ $project->students->first()->name ?? 'No Student' }}
                         </option>
                     @endforeach
                 </select>

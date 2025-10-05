@@ -36,27 +36,28 @@ class RegisteredUserController extends Controller
             'role' => ['required', 'in:teacher,admin'],
         ]);
 
-        // If registering as admin, set status to pending
-        $status = $request->role === 'admin' ? 'pending' : 'active';
-
+        // All new users start with pending status
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $request->role,
-            'status' => $status,
+            'status' => 'pending',
         ]);
+
+        // If user is teacher, also create teacher record
+        if ($request->role === 'teacher') {
+            \App\Models\Teacher::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'status' => 'pending',
+            ]);
+        }
 
         event(new Registered($user));
 
-        // If pending admin, redirect to waiting page
-        if ($status === 'pending') {
-            Auth::logout();
-            return redirect(route('login'))->with('status', 'Your admin registration is pending approval. Please wait for an administrator to approve your account.');
-        }
-
-        Auth::login($user);
-
-        return redirect(route('dashboard', absolute: false));
+        // Don't auto-login, redirect to login with message
+        return redirect()->route('login')->with('message', 'Your account has been created and is pending approval. You will be notified once approved.');
     }
 }

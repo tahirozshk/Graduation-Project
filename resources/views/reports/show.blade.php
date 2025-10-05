@@ -40,15 +40,15 @@
                 <div class="relative z-10">
                     <div class="flex items-center mb-3">
                         <div class="w-12 h-12 rounded-full bg-white bg-opacity-20 backdrop-blur-sm flex items-center justify-center text-white font-bold text-lg mr-3">
-                            {{ substr($report->project->student->name, 0, 1) }}
+                            {{ substr($report->project->students->first()->name ?? '?', 0, 1) }}
                         </div>
                         <div>
                             <p class="text-xs text-white text-opacity-80 mb-1">Student</p>
-                            <p class="font-bold text-white text-lg">{{ $report->project->student->name }}</p>
+                            <p class="font-bold text-white text-lg">{{ $report->project->students->first()->name ?? 'Unknown Student' }}</p>
                         </div>
                     </div>
                     <div class="mt-4 pt-4 border-t border-white border-opacity-20">
-                        <p class="text-sm text-white text-opacity-90 font-mono">{{ $report->project->student->student_id }}</p>
+                        <p class="text-sm text-white text-opacity-90 font-mono">{{ $report->project->students->first()->student_id ?? 'N/A' }}</p>
                     </div>
                 </div>
                 <div class="absolute top-0 right-0 w-32 h-32 bg-white opacity-5 rounded-full -mr-16 -mt-16"></div>

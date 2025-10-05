@@ -16,7 +16,6 @@ class Student extends Model
      */
     protected $fillable = [
         'student_id',
-        'teacher_id',
         'name',
         'email',
         'year',
@@ -25,19 +24,35 @@ class Student extends Model
     ];
 
     /**
-     * Get the teacher that owns the student.
+     * Get the supervisor groups for the student.
      */
-    public function teacher()
+    public function supervisorGroups()
     {
-        return $this->belongsTo(User::class, 'teacher_id');
+        return $this->hasMany(SupervisorGroup::class);
     }
 
     /**
-     * Get the projects for the student.
+     * Get the teachers through supervisor groups.
+     */
+    public function teachers()
+    {
+        return $this->belongsToMany(Teacher::class, 'supervisor_groups', 'student_id', 'teacher_id');
+    }
+
+    /**
+     * Get the project groups for the student.
+     */
+    public function projectGroups()
+    {
+        return $this->hasMany(ProjectGroup::class);
+    }
+
+    /**
+     * Get the projects through project groups.
      */
     public function projects()
     {
-        return $this->hasMany(Project::class);
+        return $this->belongsToMany(Project::class, 'project_groups', 'student_id', 'project_id');
     }
 }
 

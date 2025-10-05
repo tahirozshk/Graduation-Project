@@ -15,7 +15,6 @@ class Project extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'student_id',
         'title',
         'description',
         'project_type',
@@ -39,11 +38,19 @@ class Project extends Model
     }
 
     /**
-     * Get the student that owns the project.
+     * Get the project groups for the project.
      */
-    public function student()
+    public function projectGroups()
     {
-        return $this->belongsTo(Student::class);
+        return $this->hasMany(ProjectGroup::class);
+    }
+
+    /**
+     * Get the students through project groups.
+     */
+    public function students()
+    {
+        return $this->belongsToMany(Student::class, 'project_groups', 'project_id', 'student_id');
     }
 
     /**
@@ -52,6 +59,16 @@ class Project extends Model
     public function reports()
     {
         return $this->hasMany(Report::class);
+    }
+
+    /**
+     * Get the first student for the project (for backward compatibility).
+     * This is useful when you need a single student reference.
+     */
+    public function student()
+    {
+        return $this->belongsToMany(Student::class, 'project_groups', 'project_id', 'student_id')
+            ->limit(1);
     }
 }
 

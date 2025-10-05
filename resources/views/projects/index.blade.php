@@ -41,7 +41,7 @@
                  data-status="{{ $project->status }}" 
                  data-type="{{ $project->project_type }}"
                  data-title="{{ strtolower($project->title) }}"
-                 data-student="{{ strtolower($project->student->name) }}">
+                 data-student="{{ strtolower($project->students->pluck('name')->implode(' ')) }}">
                 
                 <!-- Project Header with Icon -->
                 <div class="p-6 pb-4">
@@ -65,16 +65,23 @@
                     <p class="text-sm text-gray-600 mb-4 line-clamp-2">{{ $project->description }}</p>
                 </div>
 
-                <!-- Student Info -->
+                <!-- Students Info -->
                 <div class="px-6 pb-4">
-                    <div class="flex items-center mb-4">
-                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-semibold mr-3" style="background-color: #7A001E;">
-                            {{ substr($project->student->name, 0, 1) }}
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <p class="text-sm font-medium text-gray-900">{{ $project->student->name }}</p>
-                            <p class="text-xs text-gray-500">{{ $project->student->student_id }}</p>
-                        </div>
+                    <div class="space-y-3">
+                        @foreach($project->students as $student)
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-semibold mr-3" style="background-color: #7A001E;">
+                                    {{ substr($student->name, 0, 1) }}
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-medium text-gray-900">{{ $student->name }}</p>
+                                    <p class="text-xs text-gray-500">{{ $student->student_id }}</p>
+                                </div>
+                                @if($student->pivot->role === 'Leader')
+                                    <span class="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">Leader</span>
+                                @endif
+                            </div>
+                        @endforeach
                     </div>
                 </div>
 

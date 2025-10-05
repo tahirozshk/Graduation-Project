@@ -116,12 +116,7 @@
                 <div class="notification-card bg-white rounded-xl shadow-sm hover:shadow-md transition-all border-l-4 p-6 {{ $notification->is_read ? 'opacity-70' : '' }}"
                      data-type="{{ $notification->type }}"
                      data-read="{{ $notification->is_read ? 'read' : 'unread' }}"
-                     style="border-color: 
-                        @if($notification->type === 'overdue') #EF4444
-                        @elseif($notification->type === 'deadline') #F97316
-                        @elseif($notification->type === 'system') #10B981
-                        @else #3B82F6
-                        @endif;">
+                     style="border-color: {{ $notification->type === 'overdue' ? '#EF4444' : ($notification->type === 'deadline' ? '#F97316' : ($notification->type === 'system' ? '#10B981' : '#3B82F6')) }};">
                     <div class="flex items-start">
                         <!-- Icon -->
                         <div class="flex-shrink-0">
@@ -151,12 +146,19 @@
                         <div class="ml-4 flex-1">
                             <div class="flex items-start justify-between">
                                 <div class="flex-1">
-                                    <h4 class="text-base font-bold text-gray-900 mb-1">
-                                        {{ $notification->message }}
-                                        @if(!$notification->is_read)
-                                            <span class="inline-block w-2 h-2 rounded-full bg-red-500 ml-2"></span>
-                                        @endif
-                                    </h4>
+                                    <div class="flex items-center gap-3 mb-1">
+                                        <input type="checkbox" 
+                                               class="notification-checkbox w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2" 
+                                               data-notification-id="{{ $notification->id }}"
+                                               {{ $notification->is_read ? 'checked' : '' }}
+                                               onchange="toggleNotificationRead({{ $notification->id }}, this.checked)">
+                                        <h4 class="text-base font-bold text-gray-900">
+                                            {{ $notification->message }}
+                                            @if(!$notification->is_read)
+                                                <span class="inline-block w-2 h-2 rounded-full bg-red-500 ml-2"></span>
+                                            @endif
+                                        </h4>
+                                    </div>
                                     <p class="text-sm text-gray-600 mb-3">Additional details about the notification can be shown here if needed.</p>
                                     <div class="flex items-center space-x-4 text-sm">
                                         <span class="flex items-center text-gray-500">
@@ -233,8 +235,124 @@ function filterNotifications(type) {
 }
 
 function markAllAsRead() {
-    if (confirm('Mark all notifications as read?')) {
-        alert('This feature requires backend implementation.');
+    if (confirm('Tüm bildirimleri okundu işaretlemek istediğinizden emin misiniz?')) {
+        fetch('/notifications/mark-all-read', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                // Tüm checkbox'ları işaretle
+                document.querySelectorAll('.notification-checkbox').forEach(checkbox => {
+                    checkbox.checked = true;
+                });
+                
+                // Tüm bildirimleri okundu olarak işaretle
+                document.querySelectorAll('.notification-card').forEach(card => {
+                    card.classList.add('opacity-70');
+                    card.dataset.read = 'read';
+                    
+                    // Kırmızı noktayı kaldır
+                    const redDot = card.querySelector('.inline-block.w-2.h-2');
+                    if (redDot) {
+                        redDot.remove();
+                    }
+                });
+                
+                // Başarı mesajı göster
+                alert('Tüm bildirimler okundu işaretlendi!');
+                
+                // İstatistikleri güncelle
+                location.reload();
+            } else {
+                alert('Bir hata oluştu. Lütfen tekrar deneyin.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Bir hata oluştu. Lütfen tekrar deneyin.');
+        });
+    }
+}
+
+function toggleNotificationRead(notificationId, isRead) {
+    const endpoint = `/notifications/${notificationId}/${isRead ? 'read' : 'unread'}`;
+    
+    console.log('Toggling notification:', notificationId, 'to:', isRead ? 'read' : 'unread');
+    console.log('Endpoint:', endpoint);
+    
+    fetch(endpoint, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => {
+        console.log('Response status:', response.status);
+        console.log('Response ok:', response.ok);
+        
+        if (response.ok) {
+            // Başarılı - UI'ı güncelle
+            const card = document.querySelector(`[data-notification-id="${notificationId}"]`).closest('.notification-card');
+            if (isRead) {
+                card.classList.add('opacity-70');
+                card.dataset.read = 'read';
+                
+                // Kırmızı noktayı kaldır
+                const redDot = card.querySelector('.inline-block.w-2.h-2');
+                if (redDot) {
+                    redDot.remove();
+                }
+                
+                // Başarı mesajı
+                console.log('Bildirim okundu işaretlendi');
+            } else {
+                card.classList.remove('opacity-70');
+                card.dataset.read = 'unread';
+                
+                // Kırmızı noktayı ekle
+                const title = card.querySelector('h4');
+                if (title && !title.querySelector('.inline-block.w-2.h-2')) {
+                    const redDot = document.createElement('span');
+                    redDot.className = 'inline-block w-2 h-2 rounded-full bg-red-500 ml-2';
+                    title.appendChild(redDot);
+                }
+                
+                // Başarı mesajı
+                console.log('Bildirim okunmadı olarak işaretlendi');
+            }
+            
+            // İstatistikleri güncelle
+            updateNotificationStats();
+        } else {
+            // Hata - checkbox'ı geri al
+            document.querySelector(`[data-notification-id="${notificationId}"]`).checked = !isRead;
+            console.log('Error response status:', response.status);
+            alert('Bir hata oluştu. Status: ' + response.status);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        // Hata - checkbox'ı geri al
+        document.querySelector(`[data-notification-id="${notificationId}"]`).checked = !isRead;
+        alert('Bir hata oluştu. Lütfen tekrar deneyin.');
+    });
+}
+
+function updateNotificationStats() {
+    const cards = document.querySelectorAll('.notification-card');
+    const unreadCount = Array.from(cards).filter(card => card.dataset.read === 'unread').length;
+    
+    // İstatistik kartlarını güncelle (eğer varsa)
+    const unreadElement = document.querySelector('.text-2xl.font-bold.text-gray-900');
+    if (unreadElement) {
+        unreadElement.textContent = unreadCount;
     }
 }
 </script>

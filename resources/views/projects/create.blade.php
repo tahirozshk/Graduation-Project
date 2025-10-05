@@ -11,17 +11,21 @@
 
             <!-- Student Selection -->
             <div>
-                <label for="student_id" class="block text-sm font-medium text-gray-700 mb-2">Select Student *</label>
-                <select id="student_id" name="student_id" required
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent @error('student_id') border-red-500 @enderror">
-                    <option value="">Choose a student</option>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Select Students *</label>
+                <div class="space-y-2 max-h-48 overflow-y-auto border border-gray-300 rounded-lg p-3">
                     @foreach($students as $student)
-                        <option value="{{ $student->id }}" {{ old('student_id') == $student->id ? 'selected' : '' }}>
-                            {{ $student->name }} ({{ $student->student_id }})
-                        </option>
+                        <label class="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded">
+                            <input type="checkbox" name="student_ids[]" value="{{ $student->id }}" 
+                                   {{ in_array($student->id, old('student_ids', [])) ? 'checked' : '' }}
+                                   class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm">{{ $student->name }} ({{ $student->student_id }}) - {{ $student->department }}</span>
+                        </label>
                     @endforeach
-                </select>
-                @error('student_id')
+                </div>
+                @error('student_ids')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                @enderror
+                @error('student_ids.*')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
             </div>

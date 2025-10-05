@@ -2,26 +2,22 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-// use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Model;
 
-class User extends Authenticatable
+class Teacher extends Model
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var list<string>
+     * @var array<int, string>
      */
     protected $fillable = [
         'name',
         'email',
         'password',
-        'role',
         'status',
         'approved_at',
         'approved_by',
@@ -30,11 +26,10 @@ class User extends Authenticatable
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @var list<string>
+     * @var array<int, string>
      */
     protected $hidden = [
         'password',
-        'remember_token',
     ];
 
     /**
@@ -45,32 +40,37 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'approved_at' => 'datetime',
         ];
     }
 
-
-
     /**
-     * Check if user is an admin.
+     * Get the supervisor groups for the teacher.
      */
-    public function isAdmin(): bool
+    public function supervisorGroups()
     {
-        return $this->role === 'admin';
+        return $this->hasMany(SupervisorGroup::class);
     }
 
     /**
-     * Check if user is a teacher.
+     * Get the students through supervisor groups.
      */
-    public function isTeacher(): bool
+    public function students()
     {
-        return $this->role === 'teacher';
+        return $this->belongsToMany(Student::class, 'supervisor_groups', 'teacher_id', 'student_id');
     }
 
     /**
-     * Check if user is approved.
+     * Get the notifications for the teacher.
+     */
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
+
+    /**
+     * Check if teacher is approved.
      */
     public function isApproved(): bool
     {
@@ -78,7 +78,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if user is pending approval.
+     * Check if teacher is pending approval.
      */
     public function isPending(): bool
     {
@@ -86,18 +86,10 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the user who approved this user.
+     * Get the user who approved this teacher.
      */
     public function approver()
     {
         return $this->belongsTo(User::class, 'approved_by');
-    }
-
-    /**
-     * Get users approved by this user.
-     */
-    public function approvedUsers()
-    {
-        return $this->hasMany(User::class, 'approved_by');
     }
 }

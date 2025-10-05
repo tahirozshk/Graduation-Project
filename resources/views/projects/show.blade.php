@@ -35,15 +35,29 @@
         </div>
 
         <!-- Student Info -->
-        <div class="flex items-center p-4 bg-gray-50 rounded-lg">
-            <div class="w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold" style="background-color: #7A001E;">
-                {{ substr($project->student->name, 0, 1) }}
+        @if($project->students->count() > 0)
+            @foreach($project->students as $student)
+                <div class="flex items-center p-4 bg-gray-50 rounded-lg mb-2">
+                    <div class="w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold" style="background-color: #7A001E;">
+                        {{ substr($student->name, 0, 1) }}
+                    </div>
+                    <div class="ml-4">
+                        <p class="font-semibold text-gray-900">{{ $student->name }}</p>
+                        <p class="text-sm text-gray-600">{{ $student->student_id }} • {{ $student->department }}</p>
+                    </div>
+                </div>
+            @endforeach
+        @else
+            <div class="flex items-center p-4 bg-gray-50 rounded-lg">
+                <div class="w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold bg-gray-400">
+                    ?
+                </div>
+                <div class="ml-4">
+                    <p class="font-semibold text-gray-900">No Students Assigned</p>
+                    <p class="text-sm text-gray-600">This project has no students assigned yet</p>
+                </div>
             </div>
-            <div class="ml-4">
-                <p class="font-semibold text-gray-900">{{ $project->student->name }}</p>
-                <p class="text-sm text-gray-600">{{ $project->student->student_id }} • {{ $project->student->department }}</p>
-            </div>
-        </div>
+        @endif
     </div>
 
     <!-- Project Details -->

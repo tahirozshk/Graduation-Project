@@ -63,7 +63,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm text-gray-600 mb-1">Total Students</p>
-                    <p class="text-2xl font-bold text-gray-900">{{ $reports->pluck('project.student')->unique('id')->count() }}</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ $reports->pluck('project.students')->flatten()->unique('id')->count() }}</p>
                 </div>
                 <div class="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center">
                     <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -123,15 +123,15 @@
                         <tr class="report-row hover:bg-gray-50 transition-colors" 
                             data-status="{{ $report->status }}"
                             data-project="{{ strtolower($report->project->title) }}"
-                            data-student="{{ strtolower($report->project->student->name) }}"
+                            data-student="{{ strtolower($report->project->students->first()->name ?? 'Unknown') }}"
                             data-project-id="{{ $report->project->id }}">
                             <td class="px-6 py-4">
                                 <div class="text-sm font-semibold text-gray-900">Week {{ $report->week_number }} (Oct {{ rand(1, 28) }}-{{ rand(1, 28) }}, 2025)</div>
                                 <div class="text-sm text-gray-600">{{ $report->project->title }}</div>
                             </td>
                             <td class="px-6 py-4">
-                                <div class="text-sm font-medium text-gray-900">{{ $report->project->student->name }}</div>
-                                <div class="text-xs text-gray-500">{{ $report->project->student->student_id }}</div>
+                                <div class="text-sm font-medium text-gray-900">{{ $report->project->students->first()->name ?? 'Unknown Student' }}</div>
+                                <div class="text-xs text-gray-500">{{ $report->project->students->first()->student_id ?? 'N/A' }}</div>
                             </td>
                             <td class="px-6 py-4">
                                 <div class="text-sm text-gray-900">Due: {{ $report->submission_date->format('Y-m-d') }}</div>

@@ -34,6 +34,19 @@
                     </div>
                 @endif
 
+                <!-- Approval Messages -->
+                @if (session('message'))
+                    <div class="mb-4 font-medium text-sm text-blue-600 bg-blue-50 p-3 rounded-lg">
+                        {{ session('message') }}
+                    </div>
+                @endif
+
+                @if (session('error'))
+                    <div class="mb-4 font-medium text-sm text-red-600 bg-red-50 p-3 rounded-lg">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
                 <form method="POST" action="{{ route('login') }}" class="space-y-6">
                     @csrf
 
@@ -109,9 +122,9 @@
 
                 <!-- Demo Credentials -->
                 <div class="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                    <p class="text-xs font-semibold text-gray-600 mb-2">Demo Login Credentials:</p>
-                    <p class="text-xs text-gray-600">Email: <span class="font-mono">ahmed.hassan@neu.edu.tr</span></p>
-                    <p class="text-xs text-gray-600">Password: <span class="font-mono">password</span></p>
+                    <p class="text-xs font-semibold text-gray-600 mb-2">Super Admin Credentials:</p>
+                    <p class="text-xs text-gray-600">Email: <span class="font-mono">superadmin@university.edu</span></p>
+                    <p class="text-xs text-gray-600">Password: <span class="font-mono">password123</span></p>
                 </div>
             </div>
 

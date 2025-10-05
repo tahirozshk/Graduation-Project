@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use App\Models\Teacher;
+use App\Models\SupervisorGroup;
 use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,10 +22,15 @@ class StudentController extends Controller
         
         if ($user->isAdmin()) {
             // Admin sees all students
-            $students = Student::with('projects', 'teacher')->get();
+            $students = Student::with('projects', 'teachers')->get();
         } else {
-            // Teacher sees only their own students
-            $students = $user->students()->with('projects')->get();
+            // Teacher sees only their own students through supervisor groups
+            $teacher = Teacher::where('email', $user->email)->first();
+            if ($teacher) {
+                $students = $teacher->students()->with('projects')->get();
+            } else {
+                $students = collect();
+            }
         }
         
         return view('students.index', compact('students'));
@@ -34,7 +41,16 @@ class StudentController extends Controller
      */
     public function create()
     {
-        return view('students.create');
+        $user = Auth::user();
+        
+        if ($user->isAdmin()) {
+            $teachers = Teacher::all();
+        } else {
+            $teacher = Teacher::where('email', $user->email)->first();
+            $teachers = $teacher ? collect([$teacher]) : collect();
+        }
+        
+        return view('students.create', compact('teachers'));
     }
 
     /**
@@ -42,17 +58,46 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $user = Auth::user();
+        
+        // Validation rules
+        $rules = [
             'student_id' => 'required|unique:students',
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:students',
             'year' => 'required|string',
             'department' => 'required|string',
             'status' => 'required|in:active,inactive',
-        ]);
+        ];
+        
+        // Admin can select supervisor, teacher is automatically supervisor
+        if ($user->isAdmin()) {
+            $rules['teacher_id'] = 'required|exists:teachers,id';
+        }
+        
+        $validated = $request->validate($rules);
 
-        $validated['teacher_id'] = Auth::id();
-        $student = Student::create($validated);
+        // Remove teacher_id from student creation data
+        $studentData = collect($validated)->except('teacher_id')->toArray();
+        $student = Student::create($studentData);
+
+        // Determine supervisor
+        if ($user->isAdmin()) {
+            $supervisorId = $validated['teacher_id'];
+        } else {
+            // Teacher is automatically the supervisor
+            $teacher = Teacher::where('email', $user->email)->first();
+            if (!$teacher) {
+                abort(403, 'Teacher not found.');
+            }
+            $supervisorId = $teacher->id;
+        }
+
+        // Create supervisor group relationship
+        SupervisorGroup::create([
+            'teacher_id' => $supervisorId,
+            'student_id' => $student->id,
+        ]);
 
         // Log this activity
         ActivityLog::create([
@@ -75,11 +120,14 @@ class StudentController extends Controller
         $user = Auth::user();
         
         // Check if student belongs to authenticated teacher (unless admin)
-        if (!$user->isAdmin() && $student->teacher_id !== $user->id) {
-            abort(403, 'Unauthorized action.');
+        if (!$user->isAdmin()) {
+            $teacher = Teacher::where('email', $user->email)->first();
+            if (!$teacher || !$student->teachers->contains($teacher->id)) {
+                abort(403, 'Unauthorized action.');
+            }
         }
         
-        $student->load('projects.reports', 'teacher');
+        $student->load('projects.reports', 'teachers');
         return view('students.show', compact('student'));
     }
 
@@ -91,11 +139,21 @@ class StudentController extends Controller
         $user = Auth::user();
         
         // Check if student belongs to authenticated teacher (unless admin)
-        if (!$user->isAdmin() && $student->teacher_id !== $user->id) {
-            abort(403, 'Unauthorized action.');
+        if (!$user->isAdmin()) {
+            $teacher = Teacher::where('email', $user->email)->first();
+            if (!$teacher || !$student->teachers->contains($teacher->id)) {
+                abort(403, 'Unauthorized action.');
+            }
         }
         
-        return view('students.edit', compact('student'));
+        if ($user->isAdmin()) {
+            $teachers = Teacher::all();
+        } else {
+            $teacher = Teacher::where('email', $user->email)->first();
+            $teachers = $teacher ? collect([$teacher]) : collect();
+        }
+        
+        return view('students.edit', compact('student', 'teachers'));
     }
 
     /**
@@ -106,20 +164,42 @@ class StudentController extends Controller
         $user = Auth::user();
         
         // Check if student belongs to authenticated teacher (unless admin)
-        if (!$user->isAdmin() && $student->teacher_id !== $user->id) {
-            abort(403, 'Unauthorized action.');
+        if (!$user->isAdmin()) {
+            $teacher = Teacher::where('email', $user->email)->first();
+            if (!$teacher || !$student->teachers->contains($teacher->id)) {
+                abort(403, 'Unauthorized action.');
+            }
         }
 
-        $validated = $request->validate([
+        // Validation rules
+        $rules = [
             'student_id' => 'required|unique:students,student_id,' . $student->id,
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:students,email,' . $student->id,
             'year' => 'required|string',
             'department' => 'required|string',
             'status' => 'required|in:active,inactive',
-        ]);
+        ];
+        
+        // Admin can change supervisor, teacher cannot
+        if ($user->isAdmin()) {
+            $rules['teacher_id'] = 'required|exists:teachers,id';
+        }
+        
+        $validated = $request->validate($rules);
 
-        $student->update($validated);
+        // Remove teacher_id from student update data
+        $studentData = collect($validated)->except('teacher_id')->toArray();
+        $student->update($studentData);
+
+        // Update supervisor group relationship only if admin
+        if ($user->isAdmin()) {
+            SupervisorGroup::where('student_id', $student->id)->delete();
+            SupervisorGroup::create([
+                'teacher_id' => $validated['teacher_id'],
+                'student_id' => $student->id,
+            ]);
+        }
 
         // Log this activity
         ActivityLog::create([
@@ -142,8 +222,11 @@ class StudentController extends Controller
         $user = Auth::user();
         
         // Check if student belongs to authenticated teacher (unless admin)
-        if (!$user->isAdmin() && $student->teacher_id !== $user->id) {
-            abort(403, 'Unauthorized action.');
+        if (!$user->isAdmin()) {
+            $teacher = Teacher::where('email', $user->email)->first();
+            if (!$teacher || !$student->teachers->contains($teacher->id)) {
+                abort(403, 'Unauthorized action.');
+            }
         }
         
         // Log this activity before deleting
@@ -155,6 +238,9 @@ class StudentController extends Controller
             'model_id' => $student->id,
             'description' => "Deleted student: {$student->name}",
         ]);
+        
+        // Delete supervisor group relationships first
+        SupervisorGroup::where('student_id', $student->id)->delete();
         
         $student->delete();
 
