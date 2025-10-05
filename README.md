@@ -149,14 +149,22 @@ Modern ve profesyonel bir **Öğretmen & Admin Proje Yönetim Sistemi** - Yakın
 
 ### 🔔 Bildirim Sistemi
 - ✅ Gerçek zamanlı bildirimler
-- ✅ Bildirim tipleri:
-  - Deadline (Son tarih)
-  - Overdue (Gecikmiş)
-  - System (Sistem)
-  - Reminder (Hatırlatma)
+- ✅ 4 Farklı bildirim tipi:
+  - **SYSTEM** (Varsayılan) - Genel sistem bildirimleri (Yeşil)
+  - **DEADLINE** - Teslim tarihi bildirimleri (Turuncu)
+  - **OVERDUE** - Gecikmiş görevler (Kırmızı)
+  - **REMINDER** - Hatırlatma bildirimleri (Mavi)
+- ✅ Görsel tip ayrımı:
+  - Her tip için farklı renk kodları
+  - Tip'e özel ikonlar (Takvim, Uyarı, Onay işareti)
+  - Tip'e özel butonlar (View Project, Contact Student)
+  - Badge etiketleri (normal, high, urgent)
 - ✅ Okundu/Okunmadı işaretleme
-- ✅ Bildirim filtreleme
+- ✅ Tekil ve toplu okundu işaretleme
+- ✅ JavaScript ile dinamik filtreleme
 - ✅ Badge ile okunmamış sayısı
+- ✅ İstatistik kartları (Unread, Urgent, Deadlines, Submissions)
+- ✅ AJAX ile gerçek zamanlı güncelleme
 
 ### 📊 Dashboard & Raporlama
 - ✅ İstatistik kartları
@@ -368,6 +376,118 @@ Detaylı rapor tablosu ve notlandırma
 ### Bildirimler
 Gerçek zamanlı bildirim sistemi
 - Okunmamış sayısı badge
+- 4 farklı bildirim tipi ile görsel ayrım
+- Filtreleme ve arama özellikleri
+- AJAX ile dinamik güncelleme
+
+---
+
+## 🔔 Bildirim Sistemi Detayları
+
+### Bildirim Tipleri ve Görsel Tasarım
+
+#### 1. **SYSTEM** (Varsayılan) - Genel Sistem Bildirimleri
+- **Renk**: Yeşil (`#10B981` - kenarlık, `bg-green-100` - ikon arka planı)
+- **İkon**: Onay işareti (✓)
+- **Badge**: "normal" (mavi rozet)
+- **Kullanım**: Yeni rapor gönderildi, proje güncellendi, genel bilgilendirmeler
+
+#### 2. **DEADLINE** - Teslim Tarihi Bildirimleri
+- **Renk**: Turuncu (`#F97316` - kenarlık, `bg-blue-100` - ikon arka planı)
+- **İkon**: Takvim (📅)
+- **Badge**: "high" (sarı rozet)
+- **Buton**: "View Project" (Projeyi Görüntüle)
+- **Kullanım**: Teslim tarihi yaklaştığında, milestone hatırlatmaları
+
+#### 3. **OVERDUE** - Gecikmiş Görevler
+- **Renk**: Kırmızı (`#EF4444` - kenarlık, `bg-red-100` - ikon arka planı)
+- **İkon**: Uyarı (⚠️)
+- **Badge**: "urgent" (kırmızı rozet)
+- **Buton**: "Contact Student" (Öğrenciyle İletişime Geç)
+- **Kullanım**: Teslim tarihi geçtiğinde, acil müdahale gereken durumlar
+
+#### 4. **REMINDER** - Hatırlatma Bildirimleri
+- **Renk**: Mavi (`#3B82F6` - kenarlık, `bg-purple-100` - ikon arka planı)
+- **İkon**: Onay işareti (✓) - system ile aynı
+- **Badge**: "normal" (mavi rozet)
+- **Kullanım**: Haftalık rapor hatırlatmaları, genel hatırlatmalar
+
+### Bildirim Oluşturma Örnekleri
+
+```php
+// 1. Sistem bildirimi (varsayılan)
+Notification::create([
+    'teacher_id' => $teacherId,
+    'message' => 'Yeni rapor gönderildi: Proje A - Hafta 5',
+    'type' => 'system' // yazmasanız da otomatik 'system' olur
+]);
+
+// 2. Deadline bildirimi
+Notification::create([
+    'teacher_id' => $teacherId,
+    'message' => 'Proje teslim tarihi yaklaşıyor: 3 gün kaldı',
+    'type' => 'deadline'
+]);
+
+// 3. Overdue bildirimi
+Notification::create([
+    'teacher_id' => $teacherId,
+    'message' => 'Proje teslim tarihi geçti: 2 gün gecikme',
+    'type' => 'overdue'
+]);
+
+// 4. Reminder bildirimi
+Notification::create([
+    'teacher_id' => $teacherId,
+    'message' => 'Haftalık rapor gönderimi hatırlatması',
+    'type' => 'reminder'
+]);
+```
+
+### JavaScript Fonksiyonları
+
+```javascript
+// Bildirim filtreleme
+function filterNotifications(type) {
+    const cards = document.querySelectorAll('.notification-card');
+    cards.forEach(card => {
+        const cardType = card.dataset.type;
+        if (type === 'all') {
+            card.style.display = 'block';
+        } else {
+            card.style.display = cardType === type ? 'block' : 'none';
+        }
+    });
+}
+
+// Tüm bildirimleri okundu işaretle
+function markAllAsRead() {
+    fetch('/notifications/mark-all-read', {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        }
+    });
+}
+
+// Tekil bildirimi okundu işaretle
+function toggleNotificationRead(notificationId, isRead) {
+    const endpoint = `/notifications/${notificationId}/${isRead ? 'read' : 'unread'}`;
+    fetch(endpoint, { method: 'PATCH' });
+}
+```
+
+### İstatistik Kartları
+
+- **Okunmamış**: Toplam okunmamış bildirim sayısı
+- **Acil**: `overdue` tipindeki bildirimlerin sayısı
+- **Teslim Tarihleri**: `deadline` tipindeki bildirimlerin sayısı
+- **Gönderimler**: `system` tipindeki bildirimlerin sayısı
+
+### Yetkilendirme
+
+- **Admin**: Tüm bildirimleri görüntüleyebilir ve yönetebilir
+- **Teacher**: Sadece kendi bildirimlerini görüntüleyebilir ve yönetebilir
 
 ---
 
@@ -433,9 +553,13 @@ Gerçek zamanlı bildirim sistemi
 ```
 - id (PK)
 - teacher_id (FK → users.id)
-- message
-- type (deadline/overdue/system/reminder)
-- is_read (boolean)
+- message (text) - Bildirim mesajı
+- type (string) - Bildirim tipi:
+  * system (varsayılan) - Genel sistem bildirimleri
+  * deadline - Teslim tarihi bildirimleri
+  * overdue - Gecikmiş görevler
+  * reminder - Hatırlatma bildirimleri
+- is_read (boolean) - Okundu durumu
 - created_at
 - updated_at
 ```
@@ -639,10 +763,20 @@ DELETE /reports/{id}       - Rapor sil
 
 ### Notifications
 ```
-GET    /notifications              - Tüm bildirimleri listele
-POST   /notifications              - Yeni bildirim ekle
-PATCH  /notifications/{id}/read    - Okundu işaretle
-DELETE /notifications/{id}         - Bildirim sil
+GET    /notifications                    - Tüm bildirimleri listele
+POST   /notifications                    - Yeni bildirim ekle
+PATCH  /notifications/{id}/read          - Okundu işaretle
+PATCH  /notifications/{id}/unread        - Okunmadı işaretle
+POST   /notifications/mark-all-read      - Tüm bildirimleri okundu işaretle
+DELETE /notifications/{id}               - Bildirim sil
+
+API Endpoints:
+GET    /api/notifications                - API ile bildirimleri listele
+POST   /api/notifications                - API ile bildirim oluştur
+PATCH  /api/notifications/{id}/read      - API ile okundu işaretle
+PATCH  /api/notifications/{id}/unread    - API ile okunmadı işaretle
+POST   /api/notifications/mark-all-read  - API ile tümünü okundu işaretle
+DELETE /api/notifications/{id}           - API ile bildirim sil
 ```
 
 ---
@@ -670,6 +804,15 @@ DELETE /notifications/{id}         - Bildirim sil
 - YDU logosu eklendi
 - Sidebar menü güncellendi
 - Admin panel bölümü eklendi
+
+### ✨ Gelişmiş Bildirim Sistemi
+- 4 farklı bildirim tipi (system, deadline, overdue, reminder)
+- Her tip için özel renk kodları ve ikonlar
+- Görsel tip ayrımı ve badge sistemi
+- JavaScript ile dinamik filtreleme
+- AJAX ile gerçek zamanlı güncelleme
+- İstatistik kartları ve sayaçlar
+- Tip'e özel aksiyon butonları
 
 ---
 
