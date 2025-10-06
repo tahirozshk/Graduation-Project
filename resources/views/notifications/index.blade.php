@@ -21,7 +21,7 @@
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between mb-3">
                 <div>
                     <p class="text-sm text-gray-600 mb-1">Unread</p>
                     <p class="text-2xl font-bold text-gray-900">{{ $notifications->where('is_read', false)->count() }}</p>
@@ -32,48 +32,52 @@
                     </svg>
                 </div>
             </div>
+            <p class="text-xs text-gray-500">New deadline notifications that require your attention</p>
         </div>
 
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between mb-3">
                 <div>
-                    <p class="text-sm text-gray-600 mb-1">Urgent</p>
-                    <p class="text-2xl font-bold text-gray-900">{{ $notifications->where('type', 'overdue')->count() }}</p>
+                    <p class="text-sm text-gray-600 mb-1">Project Deadlines</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ $notifications->where('type', 'project_deadline')->count() }}</p>
                 </div>
                 <div class="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center">
                     <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
                     </svg>
                 </div>
             </div>
+            <p class="text-xs text-gray-500">Projects with approaching deadlines (1 week)</p>
         </div>
 
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between mb-3">
                 <div>
-                    <p class="text-sm text-gray-600 mb-1">Deadlines</p>
-                    <p class="text-2xl font-bold text-gray-900">{{ $notifications->where('type', 'deadline')->count() }}</p>
+                    <p class="text-sm text-gray-600 mb-1">Report Deadlines</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ $notifications->where('type', 'report_deadline')->count() }}</p>
                 </div>
                 <div class="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center">
                     <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                    </svg>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm text-gray-600 mb-1">Submissions</p>
-                    <p class="text-2xl font-bold text-gray-900">{{ $notifications->where('type', 'system')->count() }}</p>
-                </div>
-                <div class="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center">
-                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
                 </div>
             </div>
+            <p class="text-xs text-gray-500">Reports with approaching submission dates (2 days)</p>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <div class="flex items-center justify-between mb-3">
+                <div>
+                    <p class="text-sm text-gray-600 mb-1">Total</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ $notifications->count() }}</p>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                </div>
+            </div>
+            <p class="text-xs text-gray-500">All deadline notifications</p>
         </div>
     </div>
 
@@ -81,62 +85,52 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
         <div class="flex flex-wrap gap-2">
             <button onclick="filterNotifications('all')" class="filter-btn px-4 py-2 text-sm font-medium rounded-lg transition-colors active" style="background-color: #7A001E; color: white;">
-                All Notifications
+                All Deadlines
             </button>
             <button onclick="filterNotifications('unread')" class="filter-btn px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-gray-100 text-gray-700 hover:bg-gray-200">
                 Unread
             </button>
-            <button onclick="filterNotifications('deadline')" class="filter-btn px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-gray-100 text-gray-700 hover:bg-gray-200">
-                Deadlines
+            <button onclick="filterNotifications('project_deadline')" class="filter-btn px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-gray-100 text-gray-700 hover:bg-gray-200">
+                Project Deadlines
             </button>
-            <button onclick="filterNotifications('overdue')" class="filter-btn px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-gray-100 text-gray-700 hover:bg-gray-200">
-                Overdue
-            </button>
-            <button onclick="filterNotifications('system')" class="filter-btn px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-gray-100 text-gray-700 hover:bg-gray-200">
-                Submissions
-            </button>
-            <button onclick="filterNotifications('reminder')" class="filter-btn px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-gray-100 text-gray-700 hover:bg-gray-200">
-                Milestones
-            </button>
-            <button class="filter-btn px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-gray-100 text-gray-700 hover:bg-gray-200">
-                Meetings
-            </button>
-            <button class="filter-btn px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-gray-100 text-gray-700 hover:bg-gray-200">
-                System
+            <button onclick="filterNotifications('report_deadline')" class="filter-btn px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-gray-100 text-gray-700 hover:bg-gray-200">
+                Report Deadlines
             </button>
         </div>
     </div>
 
     <!-- Notifications List -->
     <div>
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">All Notifications ({{ $notifications->count() }})</h3>
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Deadline Notifications ({{ $notifications->count() }})</h3>
         
         <div id="notificationsList" class="space-y-4">
             @forelse($notifications as $notification)
-                <div class="notification-card bg-white rounded-xl shadow-sm hover:shadow-md transition-all border-l-4 p-6 {{ $notification->is_read ? 'opacity-70' : '' }}"
+                <div class="notification-card bg-white rounded-xl shadow-sm hover:shadow-md transition-all border-l-4 p-6 {{ $notification->is_read ? 'opacity-70' : '' }}
+                     @if($notification->type === 'project_deadline') border-orange-500
+                     @elseif($notification->type === 'report_deadline') border-blue-500
+                     @else border-gray-500
+                     @endif"
                      data-type="{{ $notification->type }}"
-                     data-read="{{ $notification->is_read ? 'read' : 'unread' }}"
-                     style="border-color: {{ $notification->type === 'overdue' ? '#EF4444' : ($notification->type === 'deadline' ? '#F97316' : ($notification->type === 'system' ? '#10B981' : '#3B82F6')) }};">
+                     data-read="{{ $notification->is_read ? 'read' : 'unread' }}">
                     <div class="flex items-start">
                         <!-- Icon -->
                         <div class="flex-shrink-0">
                             <div class="w-12 h-12 rounded-xl flex items-center justify-center
-                                @if($notification->type === 'deadline') bg-blue-100
-                                @elseif($notification->type === 'overdue') bg-red-100
-                                @elseif($notification->type === 'reminder') bg-purple-100
-                                @else bg-green-100
+                                @if($notification->type === 'project_deadline') bg-orange-100
+                                @elseif($notification->type === 'report_deadline') bg-blue-100
+                                @else bg-gray-100
                                 @endif">
-                                @if($notification->type === 'deadline')
-                                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                @if($notification->type === 'project_deadline')
+                                    <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
                                     </svg>
-                                @elseif($notification->type === 'overdue')
-                                    <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                                @elseif($notification->type === 'report_deadline')
+                                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                     </svg>
                                 @else
-                                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                     </svg>
                                 @endif
                             </div>
@@ -168,23 +162,23 @@
                                             {{ $notification->created_at->diffForHumans() }}
                                         </span>
                                         <span class="px-2 py-1 text-xs font-medium rounded-full
-                                            @if($notification->type === 'deadline') bg-yellow-100 text-yellow-800
-                                            @elseif($notification->type === 'overdue') bg-red-100 text-red-800
-                                            @else bg-blue-100 text-blue-800
+                                            @if($notification->type === 'project_deadline') bg-orange-100 text-orange-800
+                                            @elseif($notification->type === 'report_deadline') bg-blue-100 text-blue-800
+                                            @else bg-gray-100 text-gray-800
                                             @endif">
-                                            {{ $notification->type === 'deadline' ? 'high' : ($notification->type === 'overdue' ? 'urgent' : 'normal') }}
+                                            {{ $notification->type === 'project_deadline' ? 'project' : ($notification->type === 'report_deadline' ? 'report' : 'normal') }}
                                         </span>
                                         <span class="text-gray-500">David Brown</span>
                                     </div>
                                 </div>
                                 
-                                @if($notification->type === 'deadline')
+                                @if($notification->type === 'project_deadline')
                                     <button class="ml-4 px-4 py-2 text-sm font-medium border rounded-lg hover:bg-gray-50 transition-colors" style="border-color: #7A001E; color: #7A001E;">
                                         View Project
                                     </button>
-                                @elseif($notification->type === 'overdue')
+                                @elseif($notification->type === 'report_deadline')
                                     <button class="ml-4 px-4 py-2 text-sm font-medium border rounded-lg hover:bg-gray-50 transition-colors" style="border-color: #7A001E; color: #7A001E;">
-                                        Contact Student
+                                        View Report
                                     </button>
                                 @endif
                             </div>
@@ -229,9 +223,28 @@ function filterNotifications(type) {
         } else if (type === 'unread') {
             card.style.display = cardRead === 'unread' ? 'block' : 'none';
         } else {
+            // Filter by notification type
             card.style.display = cardType === type ? 'block' : 'none';
         }
     });
+    
+    // Update the header count to show filtered results
+    const visibleCards = Array.from(cards).filter(card => card.style.display !== 'none');
+    const header = document.querySelector('h3');
+    if (header) {
+        if (type === 'all') {
+            header.textContent = `All Notifications (${cards.length})`;
+        } else if (type === 'unread') {
+            const unreadCount = Array.from(cards).filter(card => card.dataset.read === 'unread').length;
+            header.textContent = `Unread Notifications (${unreadCount})`;
+        } else {
+            const typeCount = Array.from(cards).filter(card => card.dataset.type === type).length;
+            const typeLabel = type === 'project_deadline' ? 'Project Deadlines' : 
+                            (type === 'report_deadline' ? 'Report Deadlines' : 
+                            type.charAt(0).toUpperCase() + type.slice(1) + ' Notifications');
+            header.textContent = `${typeLabel} (${typeCount})`;
+        }
+    }
 }
 
 function markAllAsRead() {
