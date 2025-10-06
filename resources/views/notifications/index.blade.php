@@ -140,12 +140,7 @@
                         <div class="ml-4 flex-1">
                             <div class="flex items-start justify-between">
                                 <div class="flex-1">
-                                    <div class="flex items-center gap-3 mb-1">
-                                        <input type="checkbox" 
-                                               class="notification-checkbox w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2" 
-                                               data-notification-id="{{ $notification->id }}"
-                                               {{ $notification->is_read ? 'checked' : '' }}
-                                               onchange="toggleNotificationRead({{ $notification->id }}, this.checked)">
+                                    <div class="mb-1">
                                         <h4 class="text-base font-bold text-gray-900">
                                             {{ $notification->message }}
                                             @if(!$notification->is_read)
@@ -172,15 +167,23 @@
                                     </div>
                                 </div>
                                 
-                                @if($notification->type === 'project_deadline')
-                                    <button class="ml-4 px-4 py-2 text-sm font-medium border rounded-lg hover:bg-gray-50 transition-colors" style="border-color: #7A001E; color: #7A001E;">
-                                        View Project
+                                <div class="flex gap-2">
+                                    @if($notification->type === 'project_deadline')
+                                        <button class="px-4 py-2 text-sm font-medium border rounded-lg hover:bg-gray-50 transition-colors" style="border-color: #7A001E; color: #7A001E;">
+                                            View Project
+                                        </button>
+                                    @elseif($notification->type === 'report_deadline')
+                                        <button class="px-4 py-2 text-sm font-medium border rounded-lg hover:bg-gray-50 transition-colors" style="border-color: #7A001E; color: #7A001E;">
+                                            View Report
+                                        </button>
+                                    @endif
+                                    <button onclick="toggleNotificationRead({{ $notification->id }})" 
+                                            class="px-4 py-2 text-sm font-medium rounded-lg transition-colors {{ $notification->is_read ? 'bg-gray-200 text-gray-600' : 'bg-blue-600 text-white hover:bg-blue-700' }}"
+                                            id="read-btn-{{ $notification->id }}"
+                                            data-read="{{ $notification->is_read ? 'true' : 'false' }}">
+                                        {{ $notification->is_read ? 'Read' : 'Read' }}
                                     </button>
-                                @elseif($notification->type === 'report_deadline')
-                                    <button class="ml-4 px-4 py-2 text-sm font-medium border rounded-lg hover:bg-gray-50 transition-colors" style="border-color: #7A001E; color: #7A001E;">
-                                        View Report
-                                    </button>
-                                @endif
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -248,7 +251,7 @@ function filterNotifications(type) {
 }
 
 function markAllAsRead() {
-    if (confirm('Tüm bildirimleri okundu işaretlemek istediğinizden emin misiniz?')) {
+    if (confirm('Are you sure you want to mark all notifications as read?')) {
         fetch('/notifications/mark-all-read', {
             method: 'POST',
             headers: {
@@ -259,11 +262,6 @@ function markAllAsRead() {
         })
         .then(response => {
             if (response.ok) {
-                // Tüm checkbox'ları işaretle
-                document.querySelectorAll('.notification-checkbox').forEach(checkbox => {
-                    checkbox.checked = true;
-                });
-                
                 // Tüm bildirimleri okundu olarak işaretle
                 document.querySelectorAll('.notification-card').forEach(card => {
                     card.classList.add('opacity-70');
@@ -274,29 +272,41 @@ function markAllAsRead() {
                     if (redDot) {
                         redDot.remove();
                     }
+                    
+                    // Butonları güncelle
+                    const readBtn = card.querySelector('[id^="read-btn-"]');
+                    if (readBtn) {
+                        readBtn.textContent = 'Read';
+                        readBtn.className = 'px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-gray-200 text-gray-600';
+                        readBtn.dataset.read = 'true';
+                    }
                 });
                 
                 // Başarı mesajı göster
-                alert('Tüm bildirimler okundu işaretlendi!');
+                alert('All notifications marked as read!');
                 
                 // İstatistikleri güncelle
-                location.reload();
+                updateNotificationStats();
+                updateSidebarNotificationCount();
+                
             } else {
-                alert('Bir hata oluştu. Lütfen tekrar deneyin.');
+                alert('An error occurred. Please try again.');
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Bir hata oluştu. Lütfen tekrar deneyin.');
+            alert('An error occurred. Please try again.');
         });
     }
 }
 
-function toggleNotificationRead(notificationId, isRead) {
-    const endpoint = `/notifications/${notificationId}/${isRead ? 'read' : 'unread'}`;
+function toggleNotificationRead(notificationId) {
+    const readBtn = document.getElementById(`read-btn-${notificationId}`);
+    const currentReadStatus = readBtn.dataset.read === 'true';
+    const newReadStatus = !currentReadStatus;
+    const endpoint = `/notifications/${notificationId}/${newReadStatus ? 'read' : 'unread'}`;
     
-    console.log('Toggling notification:', notificationId, 'to:', isRead ? 'read' : 'unread');
-    console.log('Endpoint:', endpoint);
+    console.log('Toggling notification:', notificationId, 'from:', currentReadStatus, 'to:', newReadStatus);
     
     fetch(endpoint, {
         method: 'PATCH',
@@ -307,13 +317,13 @@ function toggleNotificationRead(notificationId, isRead) {
         }
     })
     .then(response => {
-        console.log('Response status:', response.status);
-        console.log('Response ok:', response.ok);
-        
         if (response.ok) {
             // Başarılı - UI'ı güncelle
-            const card = document.querySelector(`[data-notification-id="${notificationId}"]`).closest('.notification-card');
-            if (isRead) {
+            const readBtn = document.getElementById(`read-btn-${notificationId}`);
+            const card = readBtn.closest('.notification-card');
+            
+            if (newReadStatus) {
+                // Okundu işaretle
                 card.classList.add('opacity-70');
                 card.dataset.read = 'read';
                 
@@ -323,9 +333,14 @@ function toggleNotificationRead(notificationId, isRead) {
                     redDot.remove();
                 }
                 
-                // Başarı mesajı
-                console.log('Bildirim okundu işaretlendi');
+                // Buton güncelle
+                readBtn.textContent = 'Read';
+                readBtn.className = 'px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-gray-200 text-gray-600';
+                readBtn.dataset.read = 'true';
+                
+                console.log('Notification marked as read');
             } else {
+                // Okunmadı işaretle
                 card.classList.remove('opacity-70');
                 card.dataset.read = 'unread';
                 
@@ -337,24 +352,28 @@ function toggleNotificationRead(notificationId, isRead) {
                     title.appendChild(redDot);
                 }
                 
-                // Başarı mesajı
-                console.log('Bildirim okunmadı olarak işaretlendi');
+                // Buton güncelle
+                readBtn.textContent = 'Read';
+                readBtn.className = 'px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-blue-600 text-white hover:bg-blue-700';
+                readBtn.dataset.read = 'false';
+                
+                console.log('Notification marked as unread');
             }
             
             // İstatistikleri güncelle
             updateNotificationStats();
+            
+            // Sol menüdeki notification sayısını güncelle
+            updateSidebarNotificationCount();
+            
         } else {
-            // Hata - checkbox'ı geri al
-            document.querySelector(`[data-notification-id="${notificationId}"]`).checked = !isRead;
             console.log('Error response status:', response.status);
-            alert('Bir hata oluştu. Status: ' + response.status);
+            alert('An error occurred. Status: ' + response.status);
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        // Hata - checkbox'ı geri al
-        document.querySelector(`[data-notification-id="${notificationId}"]`).checked = !isRead;
-        alert('Bir hata oluştu. Lütfen tekrar deneyin.');
+        alert('An error occurred. Please try again.');
     });
 }
 
@@ -366,6 +385,33 @@ function updateNotificationStats() {
     const unreadElement = document.querySelector('.text-2xl.font-bold.text-gray-900');
     if (unreadElement) {
         unreadElement.textContent = unreadCount;
+    }
+}
+
+function updateSidebarNotificationCount() {
+    const cards = document.querySelectorAll('.notification-card');
+    const unreadCount = Array.from(cards).filter(card => card.dataset.read === 'unread').length;
+    
+    // Sol menüdeki notification badge'ini güncelle
+    const sidebarNotificationBadge = document.querySelector('.notification-badge');
+    if (sidebarNotificationBadge) {
+        if (unreadCount > 0) {
+            sidebarNotificationBadge.textContent = unreadCount;
+            sidebarNotificationBadge.style.display = 'inline-block';
+        } else {
+            sidebarNotificationBadge.style.display = 'none';
+        }
+    }
+    
+    // Menü linkindeki badge'i güncelle
+    const menuNotificationBadge = document.querySelector('a[href*="notifications"] span');
+    if (menuNotificationBadge) {
+        if (unreadCount > 0) {
+            menuNotificationBadge.textContent = unreadCount;
+            menuNotificationBadge.style.display = 'inline-block';
+        } else {
+            menuNotificationBadge.style.display = 'none';
+        }
     }
 }
 </script>
