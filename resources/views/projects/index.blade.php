@@ -99,6 +99,10 @@
                         <p class="text-xs text-gray-500 mb-1">Type</p>
                         <p class="font-medium text-gray-900">{{ $project->project_type }}</p>
                     </div>
+                    <div>
+                        <p class="text-xs text-gray-500 mb-1">Semester</p>
+                        <p class="font-medium text-gray-900">{{ $project->semester }}</p>
+                    </div>
                 </div>
 
                 <!-- Progress Bar -->

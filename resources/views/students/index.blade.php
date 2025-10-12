@@ -43,7 +43,8 @@
                         @if(Auth::user()->isAdmin())
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Teacher</th>
                         @endif
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Year & Department</th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Project Type</th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Semester</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Assigned Projects</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
@@ -91,9 +92,21 @@
                                     @endif
                                 </td>
                             @endif
-                            <td class="px-6 py-4">
-                                <div class="text-sm text-gray-900">{{ $student->year }}th Year</div>
-                                <div class="text-xs text-gray-500">{{ $student->department }}</div>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                @if($student->projects->count() > 0)
+                                    <div class="text-sm font-medium text-gray-900">{{ $student->projects->first()->project_type }}</div>
+                                @else
+                                    <div class="text-sm text-gray-400">-</div>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                @if($student->projects->count() > 0)
+                                    <span class="px-3 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
+                                        {{ $student->projects->first()->semester }}
+                                    </span>
+                                @else
+                                    <div class="text-sm text-gray-400">-</div>
+                                @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 @if($student->projects->count() > 0)
@@ -116,7 +129,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="{{ Auth::user()->isAdmin() ? '8' : '7' }}" class="px-6 py-12 text-center">
+                            <td colspan="{{ Auth::user()->isAdmin() ? '9' : '8' }}" class="px-6 py-12 text-center">
                                 <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
                                 </svg>

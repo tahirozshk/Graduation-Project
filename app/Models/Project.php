@@ -18,6 +18,7 @@ class Project extends Model
         'title',
         'description',
         'project_type',
+        'semester',
         'start_date',
         'end_date',
         'progress',

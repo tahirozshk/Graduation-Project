@@ -53,14 +53,16 @@
                 @enderror
             </div>
 
-            <!-- Project Type and Status -->
+            <!-- Project Type and Semester -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label for="project_type" class="block text-sm font-medium text-gray-700 mb-2">Project Type *</label>
                     <select id="project_type" name="project_type" required
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent @error('project_type') border-red-500 @enderror">
-                        <option value="Research" {{ old('project_type') == 'Research' ? 'selected' : '' }}>Research</option>
-                        <option value="Development" {{ old('project_type') == 'Development' ? 'selected' : '' }}>Development</option>
+                        <option value="Internship I" {{ old('project_type') == 'Internship I' ? 'selected' : '' }}>Internship I</option>
+                        <option value="Internship II" {{ old('project_type') == 'Internship II' ? 'selected' : '' }}>Internship II</option>
+                        <option value="Graduation I" {{ old('project_type') == 'Graduation I' ? 'selected' : '' }}>Graduation I</option>
+                        <option value="Graduation II" {{ old('project_type') == 'Graduation II' ? 'selected' : '' }}>Graduation II</option>
                     </select>
                     @error('project_type')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -68,18 +70,32 @@
                 </div>
 
                 <div>
-                    <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Status *</label>
-                    <select id="status" name="status" required
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent @error('status') border-red-500 @enderror">
-                        <option value="Planning" {{ old('status') == 'Planning' ? 'selected' : '' }}>Planning</option>
-                        <option value="In Progress" {{ old('status') == 'In Progress' ? 'selected' : '' }}>In Progress</option>
-                        <option value="Review" {{ old('status') == 'Review' ? 'selected' : '' }}>Review</option>
-                        <option value="Completed" {{ old('status') == 'Completed' ? 'selected' : '' }}>Completed</option>
+                    <label for="semester" class="block text-sm font-medium text-gray-700 mb-2">Semester *</label>
+                    <select id="semester" name="semester" required
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent @error('semester') border-red-500 @enderror">
+                        <option value="Fall" {{ old('semester') == 'Fall' ? 'selected' : '' }}>Fall</option>
+                        <option value="Spring" {{ old('semester') == 'Spring' ? 'selected' : '' }}>Spring</option>
+                        <option value="Summer School" {{ old('semester') == 'Summer School' ? 'selected' : '' }}>Summer School</option>
                     </select>
-                    @error('status')
+                    @error('semester')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
                 </div>
+            </div>
+
+            <!-- Status -->
+            <div>
+                <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Status *</label>
+                <select id="status" name="status" required
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent @error('status') border-red-500 @enderror">
+                    <option value="Planning" {{ old('status') == 'Planning' ? 'selected' : '' }}>Planning</option>
+                    <option value="In Progress" {{ old('status') == 'In Progress' ? 'selected' : '' }}>In Progress</option>
+                    <option value="Review" {{ old('status') == 'Review' ? 'selected' : '' }}>Review</option>
+                    <option value="Completed" {{ old('status') == 'Completed' ? 'selected' : '' }}>Completed</option>
+                </select>
+                @error('status')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             <!-- Dates -->

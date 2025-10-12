@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Modify users table status column to include approval states
+        // Add approval system to users table
         Schema::table('users', function (Blueprint $table) {
-            $table->enum('status', ['pending', 'active', 'suspended'])->default('pending')->change();
+            $table->enum('status', ['pending', 'active', 'suspended'])->default('active')->after('password');
             $table->timestamp('approved_at')->nullable()->after('status');
             $table->unsignedBigInteger('approved_by')->nullable()->after('approved_at');
             $table->foreign('approved_by')->references('id')->on('users')->onDelete('set null');

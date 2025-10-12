@@ -149,6 +149,10 @@
                         <p class="font-semibold text-gray-900">{{ $project->project_type }}</p>
                     </div>
                     <div>
+                        <p class="text-sm text-gray-600 mb-1">Semester</p>
+                        <p class="font-semibold text-gray-900">{{ $project->semester }}</p>
+                    </div>
+                    <div>
                         <p class="text-sm text-gray-600 mb-1">Status</p>
                         <span class="inline-block px-3 py-1 text-sm font-medium rounded-full
                             @if($project->status === 'Completed') bg-green-100 text-green-800

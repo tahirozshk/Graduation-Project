@@ -123,7 +123,7 @@
                 <!-- Demo Credentials -->
                 <div class="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
                     <p class="text-xs font-semibold text-gray-600 mb-2">Super Admin Credentials:</p>
-                    <p class="text-xs text-gray-600">Email: <span class="font-mono">superadmin@university.edu</span></p>
+                    <p class="text-xs text-gray-600">Email: <span class="font-mono">admin@university.edu</span></p>
                     <p class="text-xs text-gray-600">Password: <span class="font-mono">password123</span></p>
                 </div>
             </div>
