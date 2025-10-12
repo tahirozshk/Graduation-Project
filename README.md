@@ -206,84 +206,307 @@ Modern ve profesyonel bir **Öğretmen & Admin Proje Yönetim Sistemi** - Yakın
 
 ## 🚀 Kurulum
 
-### Gereksinimler
-- PHP >= 8.2
-- Composer
-- Node.js >= 18.x
-- npm veya yarn
-- MySQL veya SQLite
+### Kurulum Seçenekleri
 
-### Adım 1: Projeyi İndirin
+1. **🐳 Docker ile Kurulum (Önerilen)** - Hızlı ve kolay
+2. **💻 Manuel Kurulum** - Geleneksel yöntem
+
+---
+
+## 🐳 Docker ile Kurulum (Önerilen)
+
+Docker ile projeyi dakikalar içinde çalıştırabilirsiniz! Tüm bağımlılıklar otomatik olarak yüklenecek.
+
+### Gereksinimler
+- Docker Desktop (Windows/Mac) veya Docker Engine (Linux)
+- Docker Compose v2.0+
+
+### ⚡ Hızlı Başlangıç
+
+1. **Projeyi klonlayın**
+   ```bash
+   git clone <repository-url>
+   cd "Graduation Project"
+   ```
+
+2. **Docker'ı başlatın**
+   ```bash
+   # Windows için
+   docker-start.bat
+   
+   # Linux/Mac için
+   chmod +x docker-start.sh
+   ./docker-start.sh
+   ```
+
+3. **Tarayıcınızda açın**
+   - 🌐 Uygulama: http://localhost:8080
+   - 🗄️ phpMyAdmin: http://localhost:8081
+
+### 🔧 Manuel Docker Kurulumu
+
 ```bash
-git clone <repository-url>
-cd "Graduation Project"
+# 1. .env dosyasını hazırlayın
+cp .env.example .env
+
+# 2. .env dosyasını düzenleyin (ÖNEMLİ!)
+# APP_KEY oluşturun:
+php artisan key:generate
+
+# Veritabanı ayarlarını Docker için yapılandırın:
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=neu_pms
+DB_USERNAME=neu_user
+DB_PASSWORD=secret
+
+# 3. Docker container'ları başlatın
+docker-compose up -d
+
+# 4. Container'ın hazır olmasını bekleyin (5-10 saniye)
+# MySQL'in başlamasını bekleyin
+
+# 5. Veritabanını hazırlayın
+docker-compose exec app php artisan migrate:fresh --force
+docker-compose exec app php artisan db:seed --force
+
+# 6. Cache'leri temizleyin
+docker-compose exec app php artisan config:clear
+docker-compose exec app php artisan cache:clear
 ```
 
-### Adım 2: PHP Bağımlılıklarını Yükleyin
+### 📝 Önemli Notlar (Docker)
+
+**⚠️ İlk Kurulum İçin Dikkat:**
+1. `.env` dosyasında mutlaka `APP_KEY` oluşturulmalı
+2. Veritabanı ayarları Docker için yapılandırılmalı (yukardaki gibi)
+3. Container'ları yeniden başlatırken `docker-compose down` ve `docker-compose up -d` kullanın
+
+**🔍 Sorun Giderme:**
 ```bash
+# Log'ları kontrol edin
+docker-compose logs app
+
+# Container'ları yeniden başlatın
+docker-compose restart app
+
+# Tam sıfırlama (veritabanı silinir!)
+docker-compose down -v
+docker-compose up -d
+```
+
+**📖 Detaylı Docker dokümantasyonu için:** [DOCKER_SETUP.md](DOCKER_SETUP.md)
+
+---
+
+## 💻 Manuel Kurulum (XAMPP)
+
+XAMPP kullanarak projeyi localhost üzerinde çalıştırabilirsiniz.
+
+### Gereksinimler
+- **XAMPP** (PHP 8.2+, MySQL içerir)
+- **Composer** (PHP bağımlılık yöneticisi)
+- **Node.js >= 18.x** (npm ile birlikte gelir)
+- **Git** (opsiyonel)
+
+### 📥 Kurulum Adımları
+
+#### 1. XAMPP'i Başlatın
+```bash
+# Apache ve MySQL servislerini başlatın
+# XAMPP Control Panel'den Start butonlarına tıklayın
+```
+
+#### 2. Projeyi XAMPP'e Yerleştirin
+```bash
+# Projeyi XAMPP htdocs klasörüne kopyalayın veya klonlayın
+# Örnek: C:\xampp\htdocs\Graduation Project
+```
+
+#### 3. Composer Bağımlılıklarını Yükleyin
+```bash
+cd "C:\xampp\htdocs\Graduation Project"
 composer install
 ```
 
-### Adım 3: JavaScript Bağımlılıklarını Yükleyin
+#### 4. NPM Bağımlılıklarını Yükleyin
 ```bash
 npm install
 ```
 
-### Adım 4: Ortam Dosyasını Oluşturun
+#### 5. .env Dosyasını Oluşturun
 ```bash
+# Windows için
 copy .env.example .env
 ```
 
-### Adım 5: Uygulama Anahtarı Oluşturun
+#### 6. .env Dosyasını Yapılandırın
+
+**.env dosyasını açın ve şu ayarları yapın:**
+
+```env
+APP_NAME=Laravel
+APP_ENV=local
+APP_KEY=                    # ← php artisan key:generate ile oluşturulacak
+APP_DEBUG=true
+APP_URL=http://localhost
+
+# XAMPP MySQL Ayarları
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1           # ← localhost
+DB_PORT=3306                # ← XAMPP MySQL portu
+DB_DATABASE=neu_pms         # ← Veritabanı adı (phpMyAdmin'den oluşturun)
+DB_USERNAME=root            # ← XAMPP varsayılan kullanıcı
+DB_PASSWORD=                # ← XAMPP'de şifre boş
+```
+
+#### 7. APP_KEY Oluşturun
 ```bash
 php artisan key:generate
 ```
 
-### Adım 6: Veritabanını Yapılandırın
-`.env` dosyasında veritabanı ayarlarını düzenleyin:
+#### 8. Veritabanını Oluşturun
 
-**SQLite için (önerilen):**
-```env
-DB_CONNECTION=sqlite
-```
+**Yöntem 1: phpMyAdmin ile (Önerilen)**
+1. Tarayıcıda `http://localhost/phpmyadmin` açın
+2. Sol tarafta "New" (Yeni) butonuna tıklayın
+3. Database name: `neu_pms` yazın
+4. "Create" butonuna tıklayın
 
-**MySQL için:**
-```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=ydu_pms
-DB_USERNAME=root
-DB_PASSWORD=
-```
-
-### Adım 7: Veritabanı Tablolarını Oluşturun
+**Yöntem 2: Komut satırı ile**
 ```bash
-php artisan migrate
+mysql -u root
+CREATE DATABASE neu_pms;
+exit;
 ```
 
-### Adım 8: Örnek Verileri Yükleyin
+#### 9. Migration'ları Çalıştırın
 ```bash
-php artisan db:seed
+php artisan migrate:fresh --seed
 ```
 
-### Adım 9: Frontend Varlıklarını Derleyin
-**Geliştirme için:**
+Bu komut:
+- ✓ Tüm tabloları oluşturur
+- ✓ Örnek verileri yükler (öğretmenler, öğrenciler, projeler)
+
+#### 10. Frontend Varlıklarını Derleyin
+
+**Geliştirme için (Hot Reload ile):**
 ```bash
 npm run dev
 ```
 
-**Üretim için:**
+**Production için (Tek sefer):**
 ```bash
 npm run build
 ```
 
-### Adım 10: Sunucuyu Başlatın
+#### 11. Projeyi Çalıştırın
+
+**Yöntem 1: Laravel Development Server (Önerilen)**
 ```bash
 php artisan serve
 ```
+Tarayıcıda: `http://localhost:8000`
 
-Tarayıcınızda `http://localhost:8000` adresini açın.
+**Yöntem 2: XAMPP Apache**
+```
+# Apache zaten çalışıyorsa, direkt şu adresi açın:
+http://localhost/Graduation%20Project/public
+```
+
+### ⚙️ XAMPP ile Çalışırken İpuçları
+
+**🔧 Port Çakışması Sorunu:**
+Eğer port 80 veya 3306 başka bir program tarafından kullanılıyorsa:
+```bash
+# Apache için (httpd.conf)
+Listen 8080      # 80 yerine 8080 kullanın
+
+# MySQL için (my.ini)
+port=3307        # 3306 yerine 3307 kullanın
+```
+
+**🔄 Cache Temizleme:**
+```bash
+php artisan cache:clear
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+```
+
+**🗄️ Veritabanını Sıfırlama:**
+```bash
+php artisan migrate:fresh --seed
+```
+
+**📝 Log Dosyalarını Kontrol:**
+```bash
+# Laravel log dosyası
+tail -f storage/logs/laravel.log
+```
+
+### 🔍 Sorun Giderme (XAMPP)
+
+**Problem: "Class not found" hatası**
+```bash
+composer dump-autoload
+php artisan clear-compiled
+```
+
+**Problem: "Permission denied" hatası**
+```bash
+# storage ve bootstrap/cache klasörlerine yazma izni verin
+chmod -R 775 storage bootstrap/cache
+```
+
+**Problem: "SQLSTATE[HY000] [1045] Access denied"**
+- `.env` dosyasındaki `DB_USERNAME` ve `DB_PASSWORD` doğru mu kontrol edin
+- XAMPP'de MySQL şifresi varsa `.env`'ye ekleyin
+
+**Problem: "No application encryption key"**
+```bash
+php artisan key:generate
+php artisan config:clear
+```
+
+### 📱 Development ile Production Farkı
+
+**Development Mode (npm run dev):**
+- ✅ Hot reload (otomatik yenileme)
+- ✅ Detaylı hata mesajları
+- ✅ Hızlı derleme
+- ❌ Büyük dosya boyutu
+
+**Production Mode (npm run build):**
+- ✅ Optimize edilmiş kod
+- ✅ Küçük dosya boyutu
+- ✅ Cache'lenmiş varlıklar
+- ❌ Her değişiklikte tekrar build gerekir
+
+### 🌐 XAMPP Virtual Host Kurulumu (Opsiyonel)
+
+Daha profesyonel bir URL için (örn: `neu-pms.local`):
+
+1. **httpd-vhosts.conf** düzenleyin:
+```apache
+<VirtualHost *:80>
+    DocumentRoot "C:/xampp/htdocs/Graduation Project/public"
+    ServerName neu-pms.local
+    <Directory "C:/xampp/htdocs/Graduation Project/public">
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+```
+
+2. **hosts** dosyasını düzenleyin (`C:\Windows\System32\drivers\etc\hosts`):
+```
+127.0.0.1    neu-pms.local
+```
+
+3. Apache'yi yeniden başlatın ve `http://neu-pms.local` adresini açın
 
 ---
 

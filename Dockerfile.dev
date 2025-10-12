@@ -1,0 +1,32 @@
+# Development Dockerfile with hot reload support
+FROM php:8.2-cli-alpine
+
+# Install system dependencies
+RUN apk add --no-cache \
+    git \
+    curl \
+    libpng-dev \
+    oniguruma-dev \
+    libxml2-dev \
+    zip \
+    unzip \
+    sqlite \
+    sqlite-dev \
+    nodejs \
+    npm
+
+# Install PHP extensions
+RUN docker-php-ext-install pdo pdo_mysql pdo_sqlite mbstring exif pcntl bcmath gd
+
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Set working directory
+WORKDIR /var/www/html
+
+# Expose ports
+EXPOSE 8000 5173
+
+# Keep container running
+CMD ["tail", "-f", "/dev/null"]
+

@@ -21,7 +21,8 @@ class ProjectSeeder extends Seeder
             [
                 'title' => 'E-Ticaret Platformu Geliştirme',
                 'description' => 'Modern web teknolojileri kullanarak kapsamlı bir e-ticaret platformu geliştirme projesi.',
-                'project_type' => 'Development',
+                'project_type' => 'Graduation I',
+                'semester' => 'Fall',
                 'start_date' => '2024-09-01',
                 'end_date' => '2024-12-31',
                 'progress' => 45,
@@ -30,7 +31,8 @@ class ProjectSeeder extends Seeder
             [
                 'title' => 'Yapay Zeka Destekli Öneri Sistemi',
                 'description' => 'Machine learning algoritmaları kullanarak kullanıcı davranışlarını analiz eden öneri sistemi.',
-                'project_type' => 'Research',
+                'project_type' => 'Graduation II',
+                'semester' => 'Spring',
                 'start_date' => '2024-08-15',
                 'end_date' => '2025-01-15',
                 'progress' => 30,
@@ -39,7 +41,8 @@ class ProjectSeeder extends Seeder
             [
                 'title' => 'Mobil Uygulama Geliştirme',
                 'description' => 'React Native kullanarak cross-platform mobil uygulama geliştirme.',
-                'project_type' => 'Development',
+                'project_type' => 'Internship I',
+                'semester' => 'Fall',
                 'start_date' => '2024-10-01',
                 'end_date' => '2025-03-01',
                 'progress' => 15,
@@ -48,7 +51,8 @@ class ProjectSeeder extends Seeder
             [
                 'title' => 'Blockchain Tabanlı Güvenlik Sistemi',
                 'description' => 'Blockchain teknolojisi kullanarak veri güvenliği sağlayan sistem geliştirme.',
-                'project_type' => 'Research',
+                'project_type' => 'Internship II',
+                'semester' => 'Spring',
                 'start_date' => '2024-07-01',
                 'end_date' => '2024-12-01',
                 'progress' => 70,
@@ -57,7 +61,8 @@ class ProjectSeeder extends Seeder
             [
                 'title' => 'IoT Sensör Ağı Yönetimi',
                 'description' => 'Internet of Things cihazları için merkezi yönetim sistemi.',
-                'project_type' => 'Development',
+                'project_type' => 'Graduation I',
+                'semester' => 'Fall',
                 'start_date' => '2024-06-01',
                 'end_date' => '2024-11-30',
                 'progress' => 90,

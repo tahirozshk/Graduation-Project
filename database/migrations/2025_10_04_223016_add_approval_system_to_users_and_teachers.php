@@ -13,18 +13,31 @@ return new class extends Migration
     {
         // Add approval system to users table
         Schema::table('users', function (Blueprint $table) {
-            $table->enum('status', ['pending', 'active', 'suspended'])->default('active')->after('password');
-            $table->timestamp('approved_at')->nullable()->after('status');
-            $table->unsignedBigInteger('approved_by')->nullable()->after('approved_at');
-            $table->foreign('approved_by')->references('id')->on('users')->onDelete('set null');
+            // Only add status column if it doesn't exist
+            if (!Schema::hasColumn('users', 'status')) {
+                $table->enum('status', ['pending', 'active', 'suspended'])->default('active')->after('password');
+            }
+            if (!Schema::hasColumn('users', 'approved_at')) {
+                $table->timestamp('approved_at')->nullable()->after('password');
+            }
+            if (!Schema::hasColumn('users', 'approved_by')) {
+                $table->unsignedBigInteger('approved_by')->nullable()->after('approved_at');
+                $table->foreign('approved_by')->references('id')->on('users')->onDelete('set null');
+            }
         });
 
         // Add approval system to teachers table
         Schema::table('teachers', function (Blueprint $table) {
-            $table->enum('status', ['pending', 'active', 'suspended'])->default('pending')->after('password');
-            $table->timestamp('approved_at')->nullable()->after('status');
-            $table->unsignedBigInteger('approved_by')->nullable()->after('approved_at');
-            $table->foreign('approved_by')->references('id')->on('users')->onDelete('set null');
+            if (!Schema::hasColumn('teachers', 'status')) {
+                $table->enum('status', ['pending', 'active', 'suspended'])->default('pending')->after('password');
+            }
+            if (!Schema::hasColumn('teachers', 'approved_at')) {
+                $table->timestamp('approved_at')->nullable()->after('password');
+            }
+            if (!Schema::hasColumn('teachers', 'approved_by')) {
+                $table->unsignedBigInteger('approved_by')->nullable()->after('approved_at');
+                $table->foreign('approved_by')->references('id')->on('users')->onDelete('set null');
+            }
         });
     }
 

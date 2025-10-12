@@ -1,0 +1,88 @@
+version: '3.8'
+
+services:
+  # PHP Laravel Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: neu_pms_app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+      - ./storage:/var/www/html/storage
+      - ./bootstrap/cache:/var/www/html/bootstrap/cache
+    environment:
+      - APP_ENV=${APP_ENV:-production}
+      - APP_DEBUG=${APP_DEBUG:-false}
+      - APP_KEY=${APP_KEY}
+      - DB_CONNECTION=${DB_CONNECTION:-mysql}
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE:-neu_pms}
+      - DB_USERNAME=${DB_USERNAME:-neu_user}
+      - DB_PASSWORD=${DB_PASSWORD:-secret}
+    depends_on:
+      - mysql
+    networks:
+      - neu_network
+
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: neu_pms_mysql
+    restart: unless-stopped
+    ports:
+      - "3307:3306"  # XAMPP ile çakışmaması için 3307 kullanılıyor
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootsecret}
+      MYSQL_DATABASE: ${DB_DATABASE:-neu_pms}
+      MYSQL_USER: ${DB_USERNAME:-neu_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - neu_network
+
+  # phpMyAdmin (Optional - for database management)
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: neu_pms_phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: ${DB_ROOT_PASSWORD:-rootsecret}
+    depends_on:
+      - mysql
+    networks:
+      - neu_network
+
+  # Redis (Optional - for caching and queues)
+  redis:
+    image: redis:alpine
+    container_name: neu_pms_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - neu_network
+
+volumes:
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  neu_network:
+    driver: bridge
+
