@@ -14,15 +14,30 @@
 
 @section('content')
 <div class="space-y-6">
-    <!-- Search Bar -->
+    <!-- Search and Filter Bar -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <div class="relative">
-            <input type="text" id="searchInput" placeholder="Search students by name, ID, or email..." 
-                   class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent text-sm" 
-                   style="focus:ring-color: #7A001E;">
-            <svg class="w-5 h-5 text-gray-400 absolute left-4 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-            </svg>
+        <div class="flex flex-col md:flex-row gap-4">
+            <div class="flex-1 relative">
+                <input type="text" id="searchInput" placeholder="Search students by name, ID, or email..." 
+                       class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent text-sm" 
+                       style="focus:ring-color: #7A001E;">
+                <svg class="w-5 h-5 text-gray-400 absolute left-4 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </div>
+            <select id="projectTypeFilter" class="px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2">
+                <option value="">All Project Types</option>
+                <option value="Internship I">Internship I</option>
+                <option value="Internship II">Internship II</option>
+                <option value="Graduation I">Graduation I</option>
+                <option value="Graduation II">Graduation II</option>
+            </select>
+            <select id="semesterFilter" class="px-4 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2">
+                <option value="">All Semesters</option>
+                <option value="Fall">Fall</option>
+                <option value="Spring">Spring</option>
+                <option value="Summer School">Summer School</option>
+            </select>
         </div>
     </div>
 
@@ -57,7 +72,9 @@
                             data-department="{{ $student->department }}"
                             data-name="{{ strtolower($student->name) }}"
                             data-email="{{ strtolower($student->email) }}"
-                            data-student-id="{{ strtolower($student->student_id) }}">
+                            data-student-id="{{ strtolower($student->student_id) }}"
+                            data-project-type="{{ $student->projects->count() > 0 ? $student->projects->first()->project_type : '' }}"
+                            data-semester="{{ $student->projects->count() > 0 ? $student->projects->first()->semester : '' }}">
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold text-sm" style="background-color: #7A001E;">
@@ -147,25 +164,36 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('searchInput');
+    const projectTypeFilter = document.getElementById('projectTypeFilter');
+    const semesterFilter = document.getElementById('semesterFilter');
     const studentRows = document.querySelectorAll('.student-row');
 
     function filterStudents() {
         const searchTerm = searchInput.value.toLowerCase();
+        const projectTypeValue = projectTypeFilter.value;
+        const semesterValue = semesterFilter.value;
 
         studentRows.forEach(row => {
             const name = row.dataset.name;
             const email = row.dataset.email;
             const studentId = row.dataset.studentId;
+            const projectType = row.dataset.projectType;
+            const semester = row.dataset.semester;
 
             const matchesSearch = name.includes(searchTerm) || 
                                 email.includes(searchTerm) || 
                                 studentId.includes(searchTerm);
+            
+            const matchesProjectType = !projectTypeValue || projectType === projectTypeValue;
+            const matchesSemester = !semesterValue || semester === semesterValue;
 
-            row.style.display = matchesSearch ? '' : 'none';
+            row.style.display = (matchesSearch && matchesProjectType && matchesSemester) ? '' : 'none';
         });
     }
 
     searchInput.addEventListener('input', filterStudents);
+    projectTypeFilter.addEventListener('change', filterStudents);
+    semesterFilter.addEventListener('change', filterStudents);
 });
 </script>
 @endsection
