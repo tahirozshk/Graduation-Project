@@ -170,7 +170,10 @@
         </form>
 
         <div class="flex space-x-3">
-            <button class="px-6 py-2.5 border border-gray-300 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors">
+            <button onclick="window.print()" class="px-6 py-2.5 border border-gray-300 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
                 Download PDF
             </button>
             <a href="{{ route('reports.edit', $report) }}" class="px-6 py-2.5 text-white text-sm font-medium rounded-lg hover:opacity-90 transition-opacity" style="background-color: #7A001E;">
@@ -179,4 +182,61 @@
         </div>
     </div>
 </div>
+
+<style media="print">
+    /* Hide navigation, header actions, and action buttons when printing */
+    nav, header, .no-print,
+    button:not(.print-show),
+    form[method="POST"],
+    a[href*="edit"],
+    a[href*="back"] {
+        display: none !important;
+    }
+    
+    /* Hide the action buttons area at bottom */
+    .flex.justify-between.items-center {
+        display: none !important;
+    }
+    
+    /* Optimize layout for print */
+    body {
+        background: white !important;
+    }
+    
+    .bg-gray-50 {
+        background: #f9fafb !important;
+    }
+    
+    /* Make sure content fits on page */
+    .max-w-7xl, .max-w-4xl {
+        max-width: 100% !important;
+    }
+    
+    /* Keep gradient backgrounds for cards - they look professional in PDF */
+    .bg-gradient-to-br {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    /* Ensure proper page breaks */
+    .space-y-6 > * {
+        page-break-inside: avoid;
+    }
+    
+    /* Make sure report content is readable */
+    .prose {
+        max-width: 100% !important;
+    }
+    
+    /* Optimize spacing for print */
+    .space-y-6 {
+        gap: 1rem;
+    }
+    
+    /* Remove unnecessary shadows */
+    .shadow-sm {
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+    }
+</style>
+
 @endsection

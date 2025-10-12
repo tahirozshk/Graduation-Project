@@ -44,6 +44,12 @@
     <!-- Students Header -->
     <div class="flex items-center justify-between">
         <h3 class="text-lg font-semibold text-gray-900">Students List ({{ $students->count() }})</h3>
+        <button onclick="exportToExcel()" class="px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors flex items-center">
+            <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            Export Excel
+        </button>
     </div>
 
     <!-- Students Table -->
@@ -195,5 +201,64 @@ document.addEventListener('DOMContentLoaded', function() {
     projectTypeFilter.addEventListener('change', filterStudents);
     semesterFilter.addEventListener('change', filterStudents);
 });
+
+// Export to Excel function
+function exportToExcel() {
+    const table = document.getElementById('studentsTable');
+    const rows = Array.from(table.querySelectorAll('.student-row')).filter(row => row.style.display !== 'none');
+    
+    // Prepare data
+    let csvContent = "Student Name,Student ID,Email,Teacher,Project Type,Semester,Assigned Project,Status\n";
+    
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        
+        // Get data from data attributes (more reliable)
+        const studentName = row.dataset.name || '';
+        const studentEmail = row.dataset.email || '';
+        const studentId = row.dataset.studentId || '';
+        const projectType = row.dataset.projectType || '-';
+        const semester = row.dataset.semester || '-';
+        
+        // Get other data from DOM
+        const email = cells[2]?.querySelector('.text-sm')?.textContent.trim() || studentEmail;
+        const studentIdFromCell = cells[1]?.textContent.trim() || studentId;
+        
+        // Teacher info (only if admin)
+        const teacherCell = cells[3];
+        let teacherInfo = '';
+        @if(Auth::user()->isAdmin())
+            teacherInfo = teacherCell?.querySelector('.text-sm.text-gray-900')?.textContent.trim() || 'No supervisor';
+            const projectCell = cells[6];
+            const statusCell = cells[7];
+        @else
+            const projectCell = cells[5];
+            const statusCell = cells[6];
+        @endif
+        
+        const project = projectCell?.querySelector('.text-sm.font-medium')?.textContent.trim() || 'No projects assigned';
+        const status = statusCell?.querySelector('span')?.textContent.trim() || '';
+        
+        csvContent += `"${studentName}","${studentIdFromCell}","${email}","${teacherInfo}","${projectType}","${semester}","${project}","${status}"\n`;
+    });
+    
+    // Add BOM for proper UTF-8 encoding in Excel
+    const BOM = '\uFEFF';
+    const csvWithBOM = BOM + csvContent;
+    
+    // Create download link
+    const blob = new Blob([csvWithBOM], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'students_list_' + new Date().toISOString().split('T')[0] + '.csv');
+    link.style.visibility = 'hidden';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
 </script>
+
 @endsection

@@ -181,7 +181,10 @@
                     <a href="{{ route('projects.edit', $project) }}" class="block w-full px-4 py-2 text-center border rounded-lg hover:bg-gray-50 transition-colors" style="border-color: #7A001E; color: #7A001E;">
                         Edit Project
                     </a>
-                    <button class="block w-full px-4 py-2 text-center border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                    <button onclick="window.print()" class="block w-full px-4 py-2 text-center border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                        </svg>
                         Export PDF
                     </button>
                     <form action="{{ route('projects.destroy', $project) }}" method="POST" onsubmit="return confirm('Are you sure?');">
@@ -196,4 +199,48 @@
         </div>
     </div>
 </div>
+
+<style media="print">
+    /* Hide navigation, header actions, and action buttons when printing */
+    nav, header, .no-print,
+    button:not(.print-show),
+    form[method="POST"] {
+        display: none !important;
+    }
+    
+    /* Optimize layout for print */
+    body {
+        background: white !important;
+    }
+    
+    .bg-gray-50 {
+        background: #f9fafb !important;
+    }
+    
+    /* Make sure content fits on page */
+    .max-w-7xl, .max-w-4xl {
+        max-width: 100% !important;
+    }
+    
+    /* Remove shadows and borders that don't look good in PDF */
+    .shadow-sm, .shadow-lg {
+        box-shadow: none !important;
+    }
+    
+    /* Ensure proper page breaks */
+    .space-y-6 > * {
+        page-break-inside: avoid;
+    }
+    
+    /* Hide the Actions sidebar in print */
+    .space-y-6 > div:last-child {
+        display: none !important;
+    }
+    
+    /* Make main content full width */
+    .lg\:col-span-2 {
+        grid-column: span 3 !important;
+    }
+</style>
+
 @endsection
