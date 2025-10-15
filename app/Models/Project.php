@@ -23,6 +23,8 @@ class Project extends Model
         'end_date',
         'progress',
         'status',
+        'project_file',
+        'file_uploaded_at',
     ];
 
     /**
@@ -35,6 +37,7 @@ class Project extends Model
         return [
             'start_date' => 'date',
             'end_date' => 'date',
+            'file_uploaded_at' => 'datetime',
         ];
     }
 

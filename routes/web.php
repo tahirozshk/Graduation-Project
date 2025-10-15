@@ -24,6 +24,7 @@ Route::middleware(['auth', 'check.approval'])->group(function () {
     Route::resource('teachers', TeacherController::class);
     Route::resource('students', StudentController::class);
     Route::resource('projects', ProjectController::class);
+    Route::post('projects/{project}/submit', [ProjectController::class, 'submitProject'])->name('projects.submit');
     Route::resource('reports', ReportController::class);
     
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');

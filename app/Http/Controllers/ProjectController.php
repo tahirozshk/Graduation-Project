@@ -9,6 +9,7 @@ use App\Models\ProjectGroup;
 use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ProjectController extends Controller
 {
@@ -208,6 +209,43 @@ class ProjectController extends Controller
         
         $project->delete();
         return redirect()->route('projects.index')->with('success', 'Project deleted successfully.');
+    }
+
+    /**
+     * Submit project file.
+     */
+    public function submitProject(Request $request, Project $project)
+    {
+        $request->validate([
+            'project_file' => 'required|file|mimes:pdf|max:10240', // Max 10MB
+        ]);
+
+        // Delete old file if exists
+        if ($project->project_file) {
+            Storage::disk('public')->delete($project->project_file);
+        }
+
+        // Store new file
+        $path = $request->file('project_file')->store("projects/{$project->id}", 'public');
+
+        // Update project with file info
+        $project->update([
+            'project_file' => $path,
+            'file_uploaded_at' => now(),
+        ]);
+
+        // Log this activity
+        ActivityLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'file_uploaded',
+            'model' => 'Project',
+            'model_name' => $project->title,
+            'model_id' => $project->id,
+            'description' => "Uploaded project file for: {$project->title}",
+        ]);
+
+        return redirect()->route('projects.show', $project)
+            ->with('success', 'Project file uploaded successfully.');
     }
 }
 

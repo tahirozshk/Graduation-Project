@@ -174,6 +174,60 @@
                 </div>
             </div>
 
+            <!-- Project File Section -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                <h3 class="text-lg font-bold text-gray-900 mb-4">Project File</h3>
+                
+                @if($project->project_file)
+                    <div class="mb-4">
+                        <div class="flex items-center p-3 bg-green-50 rounded-lg">
+                            <svg class="w-8 h-8 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            <div class="flex-1">
+                                <p class="font-medium text-green-900">Project File Uploaded</p>
+                                <p class="text-sm text-green-600">Uploaded: {{ $project->file_uploaded_at->format('M d, Y H:i') }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-3">
+                            <a href="{{ Storage::url($project->project_file) }}" target="_blank" class="inline-flex items-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                                View File
+                            </a>
+                        </div>
+                    </div>
+                @else
+                    <div class="mb-4">
+                        <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                            <svg class="w-8 h-8 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            <div class="flex-1">
+                                <p class="font-medium text-gray-900">No Project File</p>
+                                <p class="text-sm text-gray-600">No project file has been uploaded yet</p>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                <!-- File Upload Form -->
+                <form action="{{ route('projects.submit', $project) }}" method="POST" enctype="multipart/form-data" class="space-y-3">
+                    @csrf
+                    <div>
+                        <label for="project_file" class="block text-sm font-medium text-gray-700 mb-2">Submit Project File</label>
+                        <input type="file" id="project_file" name="project_file" accept=".pdf" required class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100" style="file:border-color: #7A001E;">
+                        <p class="mt-1 text-xs text-gray-500">Only PDF files are allowed. Maximum size: 10MB</p>
+                    </div>
+                    <button type="submit" class="w-full px-4 py-2 text-white text-sm font-medium rounded-lg hover:opacity-90 transition-opacity" style="background-color: #7A001E;">
+                        Upload Project File
+                    </button>
+                </form>
+            </div>
+
             <!-- Actions -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                 <h3 class="text-lg font-bold text-gray-900 mb-4">Actions</h3>
