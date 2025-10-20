@@ -26,9 +26,12 @@ if not exist .env (
     echo Creating .env file from template...
     if exist .env.docker.example (
         copy .env.docker.example .env
-        echo [OK] .env file created
+        echo [OK] .env file created from .env.docker.example
+    ) else if exist .env.example (
+        copy .env.example .env
+        echo [OK] .env file created from .env.example
     ) else (
-        echo [ERROR] .env.docker.example not found
+        echo [ERROR] No .env template found (.env.docker.example or .env.example)
         pause
         exit /b 1
     )
