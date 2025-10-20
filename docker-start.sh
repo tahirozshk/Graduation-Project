@@ -28,9 +28,12 @@ if [ ! -f .env ]; then
     echo "📝 Creating .env file from template..."
     if [ -f .env.docker.example ]; then
         cp .env.docker.example .env
-        echo "✅ .env file created"
+        echo "✅ .env file created from .env.docker.example"
+    elif [ -f .env.example ]; then
+        cp .env.example .env
+        echo "✅ .env file created from .env.example"
     else
-        echo "❌ .env.docker.example not found"
+        echo "❌ No .env template found (.env.docker.example or .env.example)"
         exit 1
     fi
 else

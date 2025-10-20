@@ -35,6 +35,7 @@ services:
              npm run dev & php artisan serve --host=0.0.0.0 --port=8000"
     depends_on:
       - mysql
+      - redis
     networks:
       - neu_network
 
@@ -72,8 +73,22 @@ services:
     networks:
       - neu_network
 
+  # Redis for caching/queues in development
+  redis:
+    image: redis:alpine
+    container_name: neu_pms_redis_dev
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_dev_data:/data
+    networks:
+      - neu_network
+
 volumes:
   mysql_dev_data:
+    driver: local
+  redis_dev_data:
     driver: local
 
 networks:
